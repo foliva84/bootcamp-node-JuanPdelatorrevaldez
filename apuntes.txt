@@ -1,0 +1,417 @@
+choco install nodejs.install
+
+uptasknode
+
+https://github.com/juanpablogdl/uptasknode
+
+Dependencias
+-------------
+Cuando instalas una dependencia crea la carpeta node_modules
+
+Dep. del Proyecto: npm install --save express   -- se guardan en package.json
+     Express-> es una dep. de proyecto, por que nuestro proyecto va a estar montado en express,
+	           incluso cuando hagamos el deployment en el servidor.
+			npm install --save express
+	
+		Una dep. de proyecto va a acompañar al proyecto desde que lo estoy creando hasta 
+		el deployment.
+Dep. de desarrollo: existen otras dependencias que solo son necesarias en la etapa de desarrollo. 
+     nodemon: nos va ayudar por ejemplo cuando estemos haciendo cambios en los <> archivos, 
+	          nodemon va a detectar esos cambios, va a reiniciar el servidor y nos va a mostrar
+			  los ultimos cambios.
+			  De esa forma podemos estar escribiendo código, agregar más funciones e ir probando mucho 
+			  más rápido.
+		npm install --save-dev nodemon
+	    ¿Por qué esta es una dependencia de desarrollo?
+		Por que los cambios en el código, únicamente se van a hacer en la etapa de desarrollo,
+		NO se van a hacer en el servidor, por lo tanto termina siendo una dependencia de desarrollo,
+		que no va a estar cuando hagamos el deployment, no va a ser parte del proyecto, solamente
+		del desarrollo.
+
+		Una dep. de desarrollo entonces solamente van a estar disponibles en la etapa de desarrollo.
+
+Creando el servidor de Express
+-------------------------------
+Archivo package-lock.json
+--------------------------
+Es igual al package.json contiene como están relacionadas las dependencias de las dependencias.
+Es decir, express tiene dependencias, y nodemon también.
+
+Utilizando npm install
+--------------------------
+Si eliminamos la carpeta node_modules, y el archivo package-lock.json, y solo dejamos el package.json,
+puedo reconstruir las dependencias en la terminal, de la sig. manera:
+
+npm install
+
+escribamos código: creamos un nuevo archivo en la raíz llamado index.js, el cual va a servir para la configuración
+-----------------
+del proyecto, en el voy a colocar mi aplicación de express, voy a estar agregando algunas dependencias, y muchas otras cosas.
+Este archivo, lo estaremos visitando a menudo a lo largo del curso. 
+
+importamos express
+------------------
+Podemos utilizar la sintaxis ES6 para importar express:
+import express from "express";
+
+Esta es la sintaxis nueva para importar, sin embargo, NO es soportada por default,
+la puedes habilitar, pero NO por default. 
+En express se utiliza algo utilizado require:
+
+const express = require("express"); 
+
+Esto: 
+		import express from "express";
+
+y esto: 
+		const express = require("express"); 
+
+!Son lo mismo!
+
+Pero express soporta la sintaxis con el require.
+
+creamos la app express
+-----------------------
+const express = require("express"); 
+
+const app = express(); // uso express como función
+
+la varible app va a contener todo lo necesario por parte de express para crear el servidor.
+
+setear puerto de express
+-----------------------
+También le podemos decir en que puerto corre express utilizando la función liste() y el número de puerto:
+
+app.listen(3000);
+
+El puerto puede ser cualquiera, solamente nos debemos asegurar que no este ocupado.
+Por ej.: si tienes MySql y esta en el puerto 80, y pones el mismo, lo más seguro es que no arranque.
+Por lo tanto un puerto seguro es 3000, otras personas le ponen 7000 o 9000 o cualquier número de ese
+tipo va a funcionar correctamente. 
+
+arrancar el servidor express
+---------------------------
+Puedes ver que tenemos ya este servidor, pero tenemos que arrancar el servidor de express.
+Para ello en este package.json es que tenemos estos "scripts", y en ellos puedes colocar
+o puede conectar lo que tengas en este index.js o en tu proyecto de express con el 
+package.json. 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+Puedes crear tu propio script, éste es uno de "test", yo usualmente siempre lo borro.
+Y voy a crear uno que se llame "start". Muchas personas le ponen "watch", otras 
+personas le ponen "dev", puedes nombrarlo como tu desees.
+En mi caso le voy a poner "start" para que arranque el servidor, y aquí le pones que 
+instrucción va a correr.  
+Ahora si recuerdas, mencioné anteriormente que instalabamos nodemon para que detecté 
+todos los cambios, cada que yo haga un cambio por ejemplo en una vista, en un controlador,
+etc, se reinicia el servidor y me muestra los últimos cambios. 
+
+Por lo tanto vamos a decir que, queremos utilizar nodemon, y debido a que sabe donde esta
+almacenado (aquí en node_modules, vas a encontrar una carpeta nodemon también), y después 
+le decimos cual va a hacer el punto de arranque, donde va a encontrar la configuración, y 
+debido a que estamos en el package.json, y el index.js esta en el mismo nivel, solamente
+le ponemos ./index.js:
+
+  "scripts": {
+    "start": "nodemon ./index.js"
+  },
+
+Va a buscar aquí (./index.js") la configuración, una vez que yo corra el script. 
+Si corres estos scripts utilizando npm de tu package.json, si buscas por ejemplo algún 
+ejemplo ya hecho de node, lo más seguro es que tengas muchos más scripts, que estaremos
+viendolos más adelante con más detalle.
+
+En la terminal ponemos npm que es el comando, luego run y el nombre del script, en nuestro
+caso start:
+	npm run start 
+
+Ahora start es como que, es muy común, demasiado común que también va a funcionar si le pones nada más:
+	npm start
+	
+Ejemplo:
+
+user@DESKTOP-VI2L807 MINGW64 /c/proyectos/bootcamp-node/UpTaskNodeJS
+$ npm start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+
+Puedes ver que me dice aquí que ha comenzado el servidor de node, si recuerdas le 
+dimos que tiene que escuchar en el puerto 3000. 
+Accedes a tu proyecto de node poniendo en un navegador:
+
+http://localhost:3000/ 
+
+Puedes ver:
+	Cannot GET /
+que nos dice que no puede obtener la ruta diagonal.
+
+Pero no hay ningún problema, eso quiere decir que se ha creado el servidor de express.
+
+Es mucho más sencillo, puedes ver que son nada más que 3 líneas para configurar un servidor
+de express.
+
+Si lo crearamos todo nosotros sería mucho más código, y no le veo sentido en realidad. 
+Sería código que nunca utilizarías en tu vida. 
+
+
+configurando una ruta para el home
+Aquí le vamos a decir, o aquí vamos a configurar que se va a ver cuando 
+yo entro en lo que viene siendo esta página, cuando yo abro:
+
+http://localhost:3000/
+
+Para ello defines algo que se llama "rutas", una ruta para la home.
+
+Aquí voy a usar use() que es lo que se conoce como el middleware 
+de express. 
+
+Piensa en el middleware en funciones que se ejecutan una tras otra.
+Más adelante estaremos viendolo más a detalle.
+
+	app.use("/", (req, res) => {
+		res.send("Hola");
+	});
+
+Básicos del Router
+-------------------------------
+En el vídeo anterior configuramos ya lo que viene siendo el servidor
+de express, tenemos una parte que es configuración de express, y tenemos
+una ruta hacia la home.
+
+	app.use("/", (req, res) => {
+		res.send("Hola");
+	});
+
+Y utilizamos este .use() y este .send(), y tal vez tengas dudas de que son.
+Todo esto es parte de lo que viene siendo por así decirlo parte del lenguaje, 
+de express.
+Que son funciones que existen en express, y por ejemplo .use(), esto lo que 
+hace es que, cualquier request, hay muchos request en HTTP, están los de POST,
+están los de GET, están los de PATCH, los de DELETE, etc; cualquier request
+va a correr este código, cuando tienes .use() cualquiera de todos los request, 
+corre este código. 
+
+Puedes ponerle aquí .get(), y solamente cuando tengamos el request de GET,
+va a imprimir Hola.
+
+	app.get("/", (req, res) => {
+		res.send("Hola");
+	});
+
+Pero por ejemplo si tuvieramos un formulario aquí, con el método de POST, 
+y yo enviará datos al formulario éste no correría por que utilizaría .get() 
+- éste es el código anterior. 
+Pero si lo pones como .use() va a leer tanto GET como POST, y cualquier 
+otro verbo de HTTP. 
+
+Para este punto .send() lo que imprime es solamente esto ( Hola ).
+Supongamos que estas creando una REST API y realizas una consulta a una BD - 
+que es algo que veremos mucho más adelante, y supongamos que tenemos
+un arreglo de productos (que es lo que te devolvería una consulta a una BD):
+
+const productos = [
+	{ 
+		producto: "Libro",
+		precio: 40
+	},
+	{ 
+		producto: "Computadora",
+		precio: 10000
+	}	
+];
+
+y ahora send() envia ese array:
+
+	app.get("/", (req, res) => {
+		res.send(productos);
+	});
+
+Imprime o nos da una respuesta como una arreglo:
+[{"producto":"Libro","precio":40},{"producto":"Computadora","precio":10000}]
+
+Pero también puedes en una REST API se recomienda utilizar .json():
+
+	app.get("/", (req, res) => {
+		res.json(productos);
+	});
+
+y eso te va devolver la respuesta como JSON.
+
+¿Cuál es la ventaja de este JSON? Qué lo puedes consumir en otro proyecto
+de Angular, o de VUE, o de React, o cualquier otro.
+
+Puedes acceder a datos desde otra aplicación, y eso es lo que hace esta parte 
+de aquí - res.json(productos), es como se van a mostrar los datos.
+
+send() es la respuesta más básica, 
+y json() más adelante veremos como mostrar HTML, 
+y para ello se utiliza .render()
+
+El primer proyecto esta pensado para utilizar como vista, por eso 
+el .render() se utiliza para las vistas, un motor que se llama pug
+
+Espero haya quedado más claro el uso del .use() y el uso del .send().
+
+Lo que viene siendo el request y el response, lo veremos más a detalle 
+conforme vayamos avanzando.
+
+Solamente ten en cuenta esto, request es la consulta que tu haces 
+cuando le das por ejemplo ENTER, o realizas una inserción de un 
+formulario. Eso viene siendo el request.
+
+El response es que te devuelve el servidor, en base a lo que tu hiciste
+request.
+
+Por ejemplo si yo hablo la página principal, la respuesta del servidor es ponerme
+un Hola, y aquí esta, es parte de la respuesta.
+
+En el siguiente vídeo vamos a continuar trabajando, la idea es comenzar a crear
+el proyecto desde ya, tampoco vamos a perder el tiempo, en una introducción
+de 100 vídeos, y 5 vídeos de proyecto, no es mi tipo de enseñanza.
+
+En el sig. video vamos a comenzar a crear lo que viene siendo la estructura 
+de este proyecto.
+
+Creando un Archivo de Rutas
+-------------------------------------------
+intro
+------
+Actualmente nuestro proyecto solamente cuenta con una sola ruta, 
+lo más seguro es que si estás creando por ej, un sitio web o una
+aplicación tengas <> rutas.
+
+Un ejemplo muy sencillo podría ser:
+
+app.use("/nosotros", (req, res) => {
+    res.send("Hola");
+});
+
+/nosotros, /contactos, /blog, etc, sería muchas rutas las que
+tendría tu sitio web.
+
+El detalle de hacer algo así o en este archivo (./index.js), 
+es que puedes ver que nada más tenemos uno (un solo archivo .js),
+es que este archivo muy pronto estará muy desordenado, tendrías
+mucho código, que bien podría ir en otro archivo.
+
+Y para eso tenemos que crear <> carpetas.
+Usualmente todo lo que son las rutas, se recomienda tenerlo
+en una carpeta llamada /routes, y aquí dentro voy a poner un 
+index.js (./routes/index.js).
+
+Siempre se recomienda tener esa seperación, por eso también 
+vamos a utilizar Model View Controller - MVC, para etner esa separación,
+lo que se conoce como separación de responsabilidad, donde c/parte 
+de la aplicación hace algo. 
+
+Para poder definir estas rutas la sintaxis va a hacer un poco diferente,
+por que si nada más cortas y lo pegas aquí, no va a funcionar de la misma 
+forma (el contenido de lo que tenemos en ./index.js):
+
+	// ruta para el home 
+	app.use("/", (req, res) => {
+		res.send("Hola");
+	});
+
+	app.use("/nosotros", (req, res) => {
+		res.send("Hola");
+	});
+
+Por ejemplo aquí puedes ver que dice app.use(), pero este app no esta 
+dispnible en este archivo, y NO podemos crear otra INSTANCIA de express.
+
+usar express router
+-------------------
+Por lo tanto para ello se utiliza algo que se conoce como Express router,
+entonces al principio de index.js (./routes/index.js) vamos a escribir:
+
+const express = require("express");
+const router = express.Router();
+
+exportar express router
+------------------------
+Tenemos que hacer dispnibles lo que vienen siendo estás rutas:
+
+	// ruta para el home 
+	app.use("/", (req, res) => {
+		res.send("Hola");
+	});
+
+	app.use("/nosotros", (req, res) => {
+		res.send("Hola");
+	});
+
+Todo este contenido, lo que está aquí, hacerlo disponible hacia
+acá (./index.js).
+
+Y si has utilizado la nueva sintaxis de ES6, usualmente se utiliza
+export default y luego el nombre del objeto, de la función que vas a
+exportar.
+
+De nueva cuenta esta sintaxis, no es soportada de forma nativa, NO!
+Pero a module.exports:
+
+const express = require("express");
+const router = express.Router();
+
+module.exports = function() {
+    // ruta para el home 
+    router.get("/", (req, res) => {
+        res.send("Index");
+    });
+
+    router.get("/nosotros", (req, res) => {
+        res.send("Nosotros");
+    });
+	return router;
+};
+
+Entonces cuando yo entre en la página principal o en 
+/nosotros, por medio de GET, se van a mostrar Index o Nosotros.
+
+importar rutas en ./index.js
+-----------------------------
+const routes = require("./routes");
+
+No es necesario poner el index.js, por que se da por implícito de que
+se va a importar.
+
+Luego agregamos:
+	app.use("/", routes());
+
+- routes va con paréntesis por que lo que importamos desde routes, es 
+una función:
+
+const express = require("express");
+const routes = require("./routes");
+
+// crear un app de express
+const app = express();
+
+app.use("/", routes());
+
+app.listen(3000);
+
+Y de esta forma podemos crear múltiples páginas e ir accediendo
+a <> secciones, crear un sitio web con múltiples secciones o 
+una aplicación con <> secciones.
+
+Puedes ver que tenemos nuestro archivo de rutas, y tenemos
+este request y response (req y res), y nos dice que se tiene que 
+mostrar.
+
+Eso en el MVC es obligación del Controller, no es obligación de 
+la ruta.
+
+Por lo tanto en el siguiente video vamos a crear la parte 
+de los controladores, para definir esta estructura que tenemos
+aquí.
