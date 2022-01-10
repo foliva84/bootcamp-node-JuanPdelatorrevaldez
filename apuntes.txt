@@ -517,7 +517,18 @@ Es el encargado de registrar todas las URLs's o endpoints que soporta
 tu aplicación, y en base a que el usuario visite esas URL's, se realizan
 ciertas acciones. 
 
-Por ejemplo, si el usuario visita
+Por ejemplo, si el usuario accede a /productos, bueno el Router manda a llamar
+al controlador, le dice, alguien esta visitando, haciendo uso de la aplicación,
+es tu problema que pase de aquí en adelante.
+
+El controlador se comunica con el modelo, le dice que es lo que tiene que 
+consultar, obtiene los datos del modelo, que se pasan de regreso hacia el controlador,
+es decir, controlador y modelo para mandarlo a llamar y después obtener los datos;
+y finalmente es el controlador quien le pasa los datos hacia la vista para
+que se muestren.
+
+
+
 
 
 
