@@ -576,4 +576,145 @@ configurar lo que viene siendo la parte de las vistas del MVC.
 
 Así que en el siguiente video vamos a configurar las vistas.
 
-Este primer proyecto esta hecho con pug, así que continuamos en el próximo video.
+Este primer proyecto esta hecho con PUG, así que continuamos en el próximo video.
+
+Qué es el Template Engine
+-------------------------------------------
+En este vídeo vamos a ver que son los Template Engines o también se les conoce cómo
+motores de plantilla.
+
+¿Qué son?
+Son la V (Vista) del MVC.
+
+Permiten mostrar la parte visual (HTML) en una aplicaciones express - y bueno en realidad
+en cualquier otro framework que decidas utilizar, casi todos tienen su propio Template Engine.
+
+Debido a que el modelo retorna un objeto ( o también puede ser un arreglo ) de datos, 
+un Template Engine te va permitir acceder a los resultados de una consulta y también
+mostrarlos en la pantalla.
+
+Caract. de un Template Engine
+----------------------------------
+Hay una gran variedad y c/u tiene su propia sintaxis.
+Usualmente puedes escribir código JS dentro del HTML 
+   - es decir, si hiciste una consulta por ejemplo para productos, la obtuviste del modelo,
+     los datos en el controlador lo pasa a la vista, y tienes 100 productos ... puedes
+	 iterar en esos 100 productos en lo que viene siendo la vista, con un for each,
+	 y es un código JS, e ir imprimiendo el resultado de esa consulta en lo que 
+	 viene siendo tu vista al final. 
+	 Se puede decir que se "compila" y termina siendo un código HTML plano, 
+	 pero en la parte de desarrollo termina siendo de gran ayuda porque
+	 simplifica mucho como se van a imprimir los datos.
+Si tienes experiencia en Angular, Reac o Vue, usualmente reemplazan estos 
+Template Engines en una aplicación de Node.
+
+Lo más comunes en Node-Express
+----------------------------------
+PUG ( Antes JADE )
+   - Bastante limpio en la forma en la que queda el template
+EJS - Embedded JavaScript
+HBS - Handlebars.js (Mustache.js)
+   - Este era como un sistema de templates en JavaScript bastante común
+     hace muchos años, y hoy en día sigue siendo bastante popular.
+     Se fusiona con Mustache.js - que también es bastante bueno, 
+	 entonces son excelentes opciones.
+     Todos los proyectos están hechos con algunos de estos, la idea es que
+     te sientas familiarizado con alguno de ellos, aprendas, veas con cual
+     te siente más cómodo escribiendo código, aprendas sobre todo los 3, y 
+     de ahí tu decidas cual crees que es el mejor.
+- React 
+   - También existe un Template Engine para React que es bastante común.
+
+Un Template Engine se instala vía npm
+---------------------------------------
+   npm install pug
+
+y se habilita en el archivo principal
+   // habilitar pug
+   app.set("view-engine", "pug");
+
+   El 2do parámetro dice "pug", pero puede cambiar ... depende el Template que
+   hayas decidido utilizar, puede que sea pug como en este caso, puede que
+   sea hbs, o también puede que sea ejs.
+
+Finalmente veamos un poco la sintaxis de cada uno.
+
+Ejemplo PUG
+-------------
+
+   if tareas.length
+      each tarea in tareas
+	       li.tarea(data-tarea=`${tarea.id}`)
+		      p= tarea.tarea
+
+	Etiquetas de apertura y cierre generadas automáticamente.
+
+Ejemplo Handlebars
+-------------------
+	<div class="caja">
+		<p class="etiqueta">Empresa</p>
+		<p class="nombre">{{ vacante.empresa }}</p>  
+	</div>
+	<div class="caja">
+		<p class="etiqueta">Ubicación</p>
+		<p class="nombre">{{ vacante.ubicacion }}</p>  
+	</div>
+
+	Etiquetas de aperturas y cierre son necesarias.
+	Lo que es dinámico lo ponemos dentro de estas dobles llaves, y 
+	después el nombre del objeto para ir imprimiendo c/u de ellos.
+
+Esta sintaxis se puede sentir un poco más familiar en la parte del HTML.
+
+Ejemplo EJS
+-------------
+	<div class="informacion-usuario">
+		<div class="imagen">
+			<% if (usuario.imagen) { %>
+				<img src="/uploads/perfiles/<%= usuario.imagen %>" />
+			<% } %>   
+		</div>
+		<div class="texto">
+			<%- usuario.descripcion %>
+		</div>
+	</div>
+
+Nota como en este caso sigue siendo el HTML con etiqueta de apertura y cierre.
+Pero x ejemplo digamos esta parte que esta debajo de esta div class="texto"
+ahi tenemos <%- usuario.descripcion %>, usuario es el objeto principal,
+pero nota esta sintaxis de menor que, luego porcentaje, luego un guión medio,
+Eso es lo que va a decir, bueno ignora que esto sea un HTML, esto es una 
+variable de JS, imprimimelo como tal, es dinámico, viene de la BD, imprimelo
+como tal.
+
+Ahora nota por ejemplo esa parte que dice usuario.descripcion como tiene un guión
+medio, y arriba el if no lo tiene. 
+
+Cuando le colocas un guión medio o un signo de igual eso quiere decir imprimelo,
+cuando no colocas nada eso quiere decir evalúa el código JS; y nota como 
+evaluamos si hay una imagen, entonces imprimimos la imagen.
+
+Y nota como por ejemplo aquí donde dice usuario.imagen tenemos un signo igual.
+
+La <> entre esto 2, guión medio y signo igual, en realidad no es mucha.
+Uno se conoce como están los datos escapados, y el otro no.
+
+Finalmente el curso incluye:
+Cada proyecto hecho con un template engine diferente.
+   -- El 1° esta hecho en PUG
+   -- El 2° con Handlebars
+   -- El 3° esta hecho con EJS
+
+Finalmente tendremos algo de React pero no como Template Engine.
+
+Con todos puedes lograr / mostrar lo mismo, así que utiliza 
+el que se sienta más natural.
+
+Una vez que hayas finalizado el curso y finalmente si quieres leer
+un poco más, en esta URL hay una gran cantidad de Template Engine
+soportados por express:
+
+https://github.com/expressjs/express/wiki#template-engines
+
+No hay nada más que 3, son como 20, pero estos son lo más comunes 
+hoy en día.
