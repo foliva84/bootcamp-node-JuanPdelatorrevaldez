@@ -527,8 +527,53 @@ es decir, controlador y modelo para mandarlo a llamar y después obtener los dat
 y finalmente es el controlador quien le pasa los datos hacia la vista para
 que se muestren.
 
+Creando el Controlador de los Proyectos
+-------------------------------------------
+Vamos a crear la parte del controlador que nos va a mostrar, lo que viene siendo
+el index y nosotros.
 
+Aquí en la raíz del proyecto voy a crear una nueva carpeta que voy a nombrar como
+controllers.
 
+El controlador es lo que va a estar en la parte de a medias, por así decirlo,
+del modelo y de lo que viene siendo la vista... El controlador es lo que conecta
+a ambas partes.
 
+En este caso nuestro Router (./routes/index.js), puedes ver que definimos las rutas,
+pero también esta parte de código, la segunda parte de lo que viene siendo el router,
+nos dice que se va a mostrar, en la parte del HTML, esto es obligación del controlador.
 
+Creamos el archivo proyectosController.js en ./controllers: 
 
+exports.proyectosHome = (req, res) => {
+    res.send("Index");
+};
+
+Luego importamos proyectosController en ./routes/index.js:
+
+const express = require("express");
+const router = express.Router();
+
+// importar el controlador
+const proyectosController = require("../controllers/proyectosController");
+
+module.exports = function() {
+    router.get("/", proyectosController.proyectosHome);
+
+    router.get("/nosotros", (req, res) => {
+        res.send("Nosotros");
+    });
+    return router;
+};
+
+De esta forma lo que viene siendo tu Router, funciona únicamente como router,
+y el controlador es el que define, que se va a ver, que se va a mostrar, en 
+lo que viene siendo el HTML, que de momento solamente tenemos estos send()
+pero la idea es ir agregando vistas ...
+
+Y para ver algo diferente, que no sea nada más ese texto, tenemos que
+configurar lo que viene siendo la parte de las vistas del MVC. 
+
+Así que en el siguiente video vamos a configurar las vistas.
+
+Este primer proyecto esta hecho con pug, así que continuamos en el próximo video.
