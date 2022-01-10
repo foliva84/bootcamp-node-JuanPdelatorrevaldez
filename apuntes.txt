@@ -415,3 +415,109 @@ la ruta.
 Por lo tanto en el siguiente video vamos a crear la parte 
 de los controladores, para definir esta estructura que tenemos
 aquí.
+
+Que es Model View Controller - MVC
+-------------------------------------------
+intro
+------
+Los proyectos desarrollados en este curso utilizan el patrón MVC,
+lo que se conoce como Model View Controller, en español 
+Modelo Vista Controlador.
+
+Veamos brevemente que és Model View Controller (MVC).
+Es un patrón de diseño de software que permite la separación de 
+aplicaciones, así se le conoce a cada pieza, que tiene como 
+una obligación, y solamente se dedica a cumplir esa obligación.
+
+Con <> de otras formas de escribir código, en la que la consulta a la
+BD, el código PHP por ejemplo y el HTML se revuelven, en el MVC no se
+hace de esa forma. 
+
+Cada pieza es separada, cada pieza realiza una función, y solamente esa,
+y bueno se realiza en tu aplicación web.
+
+Acá dice en tu aplicación web, por que el curso se enfoca a desarrollo web,
+pero también hay MVC para desarrollo de aplicaciones mobiles por ejemplo.
+
+Enfatiza la separación de la lógica de programación y lo que se muestra en una
+pantalla, es decir lo que se muestra - los datos, son o se almacenan en una
+vista, pero esos datos vienen de algo que se conoce como el modelo.
+
+Entonces son 3 piezas, 
+
+	Model es igual a Modelo,
+	View es igual a la Vista, y 
+	Controller es igual a Controlador.
+
+Estare utilizando estos términos de forma o mejor dicho los estaré cambiando,
+es decir, algunas veces me voy a referir a Model o a Modelo, es exactamente lo mismo.
+
+Modelo
+------
+Primero veamos que es el Modelo o el Model. 
+Es el encargado de los datos - usualmente viene de una BD, por lo tanto es en el 
+Modelo donde realizas las consultas y de toda la lógica para mostrar esos datos.
+
+Es decir, el modelo va a contar con una serie de métodos para realizar la consulta
+a la BD, pero también es el que le da la forma a los sujetos, es decir si yo tengo,
+un modelo para clientes, bueno voy a colocar ahí por ejemplo un Id, el nombre del 
+cliente, que tipo de cliente es y en que categoría esta; alguna imagen del cliente,
+su teléfono de contacto, toda la forma del objeto de clientes se la va a dar el 
+modelo.
+
+Veamos un ejemplo...
+Supongamos que un usuario visita la sección de productos, que es una tienda virtual.
+Ahí hay muchas cosas que suceden, es decir, el modelo va a encargarse de realizar 
+la consulta, pero toda la parte visual es algo que lo hace la vista, entonces 
+ahí tenemos un poco la separación de obligaciones.
+
+El modelo únicamente se encarga de traer los datos desde la BD, mientras que lo que
+se ve en pantalla, corresponde a lo que se conoce como la vista.
+
+Vista
+------
+La vista es la que se encarga de todo lo que se ve en la pantalla (HTML), es 
+decir todo el HTML.
+
+Ejemplo:
+y bueno volviendo al ejemplo anterior, si el modelo hace la consulta a la BD, 
+se traen los resultados de la BD para los productos. 
+Es la vista la que muestra esos resultados, es el HTML, es la parte visual.
+
+
+Controller
+------------
+Y finalmente tenemos el Controller. 
+Es el que se comunica entre el Modelo y la Vista, muy importante.
+Es decir tu visitas /productos, se comunica con el modelo y dice: 
+"oye un usuario esta visitando productos, pasame todos los productos,
+y lo que viene siendo el modelo se regresa al controlador".
+
+Dice: "acá están los productos", y el controlador se lo pasa hacia la vista
+para que se vean.
+
+Se puede decir como la persona en medio, es lo que comunica, lo que viene
+siendo los datos de la BD, ya con lo que se ve en el HTML.
+
+Es como lo que esta ahí a medias, como el medio de comunicación entre ambos.
+
+Y bueno antes de que el modelo consulte la BD, es el encargado de mandar
+a llamar el modelo, y decirle o esperar a que tenga los resultados, y el 
+modelo una vez que tiene los resultados de la consulta a la BD, se los
+regresa, lo que viene siendo el controlador para que éste los pase hacia
+la vista.
+
+Router
+--------
+Un término que se menciona poco, en MVC, pero en express se utiliza mucho
+y otros frameworks como Laravel, es el Router, o lo que viene siendo
+las URLs reales de un sitio web.
+
+Es el encargado de registrar todas las URLs's o endpoints que soporta
+tu aplicación, y en base a que el usuario visite esas URL's, se realizan
+ciertas acciones. 
+
+Por ejemplo, si el usuario visita
+
+
+
