@@ -1092,3 +1092,79 @@ Tenemos que crear una nueva ruta en ./routes/index.js, y
 crear una nueva vista.
 
 Veamos como hacer esa parte en el próximo video.
+
+Creando la sección para Nuevos Proyectos
+------------------------------------------
+Continuemos con nuestro proyecto, vamos a abrir ./views/layout.pug,
+aquí donde tenemos este botón que dice Nuevo Proyecto, el enlace aún
+no funciona:
+	.panel.crear-proyecto
+		a(href="#" class="boton") Nuevo Proyecto
+			span +
+
+tiene el signo de gato (#) solamente para simular el enlace, así 
+que vamos a ponerle entre comillas /nuevo-proyecto:
+	.panel.crear-proyecto
+		a(href="#" class="boton") Nuevo Proyecto
+			span +
+
+Si guardamos y vamos http://locahost:3000/ y hacemos clic en Nuevo Proyecto,
+vemos que nos devuelve que no puede encontrar esa ruta:
+
+Cannot GET /nuevo-proyecto
+
+Eso pasa por que cuando creas nuevas rutas así, tienes que ir al router,
+y definir también esas rutas para que express sepa que existen.
+
+Entonces en ./views/layout.pug, colocamos la ruta hacia /nuevo-proyecto:
+	.panel.crear-proyecto
+		a(href="./nuevo-proyecto" class="boton") Nuevo Proyecto
+			span +
+
+Luego vamos a ./routes/index.js y también incluimos la ruta:
+
+	module.exports = function() {
+		router.get("/", proyectosController.proyectosHome);
+		router.get("/nuevo-proyecto", proyectosController.formularioProyecto);
+		return router;
+	};
+
+En ./controllers/proyectosController.js:
+	exports.formularioProyecto = (req, res) => {
+		res.render("nuevo-proyecto", {
+			nombrePagina: "Nuevo Proyecto"
+		});
+	};
+
+En ./views vamos a crear un archivo nuevo: 
+	- nuevo-proyecto.pug
+
+En nuevo-proyecto.pug poner el siguiente contenido:
+extends layout 
+
+block contenido
+    .contenido-principal
+        h1 #{nombrePagina}
+
+En index.pug para dejarlo similar a nuevo-proyecto.pug colocamos 
+lo siguiente:
+
+extends layout 
+
+block contenido
+    .contenido-principal
+        h1 #{nombrePagina}
+
+para finalizar
+---------------
+Entonces cada vez que hay que agregar una nueva ruta son 3 cosas las 
+que tenemos que tener en cuenta:
+
+	- 1°) Agregarlo en el routes (./routes/index.js)
+	- 2°) Definir la parte del controlador
+	- 3°) Agregar la vista
+
+Tenemos lista ya la nueva vista para ./nuevo-proyecto, nos hace
+falta un formulario. 
+
+Todo eso lo veremos en el próximo video.
