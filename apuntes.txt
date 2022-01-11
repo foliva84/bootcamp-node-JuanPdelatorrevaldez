@@ -995,3 +995,100 @@ Y eso es por que tenemos que ir al archivo de configuración de node,
 y decirle en que carpeta va a encontrar esos archivos.
 
 Así que todo eso lo veremos en el próximo video.
+
+Habilitando los Archivos Estáticos y finalizndo el Master Page
+----------------------------------------------------------------------
+En el vídeo anterior agregamos lo que viene siendo tanto normalize.css como 
+app.css.
+
+- normalize.css: nos va a resetear algunos estilos por default de los navegadores.
+- app.css: contiene los estilos para este proyecto.
+
+Para no estar escribiendo todo el css, ya lo incluí como material del curso.
+
+Pero puedes que nos aparece un error, nos dice que no encuentra lo que 
+viene siendo estas carpetas - las agregamos en la carpeta public, es 
+una recomendación, es como una convención que hay de nombrarla como 
+public, pero tu puedes nombrarla com otu desees. 
+
+Por que tienes que decirle a node en que parte va a encontrar esos archivos, y eso
+lo haces de nueva cuenta en el ./index.js.
+
+Aquí después de crear la aplicación de express, vamos a decirle
+donde cargar los archivo estáticos:
+
+	// Donde cargar los archivos estáticos
+	app.use(express.static("public"));
+
+finalizando la Master Page
+---------------------------
+./views/layout.pug
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="./css/normalize.css")
+        link(rel="stylesheet", href="./css/app.css")
+        //- title= nombrePagina
+        title #{nombrePagina}
+    body 
+        header.barra 
+            h1 UpTask - Administrador de Proyectos 
+            a(href="#") Cerrar Sesión
+
+        main.contenedor
+            aside.contenedor-proyectos
+                .panel.crear-proyecto
+                    a(href="#" class="boton") Nuevo Proyecto
+                        span +
+                .panel.lista-proyectos
+                    h2 Proyectos 
+                    ul#proyectos.proyectos
+                        li
+                            a(href="#") Diseño de Tienda Virtual
+                        li
+                            a(href="#") Diseño de Nuevo Blog
+                        li
+                            a(href="#") Diseño de Tienda Logotipo                            
+            
+            block contenido
+
+para cambiar el titulo del layout
+----------------------------------
+En ./controllers/proyectosController.js:
+
+	exports.proyectosHome = (req, res) => {
+		res.render("index", {
+			nombrePagina: "Proyectos"
+		});
+	};
+
+En el método render() usamos el 2° parámetro, el cual recibe un objeto.
+En este caso le pasamos la propiedad nombrePagina.
+
+Luego desde ./views/layout.pug para referenciarlo se puede 
+hacer de 2 formas:
+
+1°) Usando el signo igual espacio y el nombre de la propiedad, luego de title
+
+	title= nombrePagina
+
+2°) Usando # y entre llaves poner el nombre de la propiedad, luego de title
+
+	title #{nombrePagina}
+
+lo que sigue
+-------------
+Puedes ver que agregamos este botón de Nuevo Proyecto.
+No hace nada de momento, por que si abrimos lo que viene siendo el 
+layout, pero ver que nada más dice aquí, en el href="#":
+
+	a(href="#" class="boton") Nuevo Proyecto
+		span +
+
+Tenemos que crear una nueva ruta en ./routes/index.js, y 
+crear una nueva vista.
+
+Veamos como hacer esa parte en el próximo video.
