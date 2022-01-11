@@ -716,5 +716,141 @@ soportados por express:
 
 https://github.com/expressjs/express/wiki#template-engines
 
+https://expressjs.com/en/resources/template-engines.html
+
 No hay nada más que 3, son como 20, pero estos son lo más comunes 
 hoy en día.
+
+Instalando Pug y habilitando las Vistas en Express
+------------------------------------------------------
+Actualmente sino en nuestro sitio web abrimos nosotros o abrimos
+la página de inicio, solamente tenemos este texto:
+
+Inicio
+
+Estamos utilizando lo que viene siendo .send():
+	exports.proyectosHome = (req, res) => {
+		res.send("Index");
+	};
+
+, y .send() solamente va a mostrar lo que este dentro del paréntesis().
+
+Si tu proyecto va a crecer y quieres que se vea más atractivo a la vista,
+lo más seguro es que quieras agregar algo de HTML, CSS.
+
+Y la forma en que lo haces es agregando la parte, ya tenemos el controlador,
+tenemos que agregar la parte de las vistas.
+
+Y existen muchas formas de agregar vistas en express.
+
+Casi siempre se utiliza un lenguaje de template, un template engine.
+Existen una gran variedad que puedes utilizar con express.
+Puedes ver en esta lista, tienes todos estos que están aquí, de los que
+puedes utilizar con express:
+
+https://expressjs.com/en/resources/template-engines.html
+
+En este curso estaremos utilizando estos 3:
+- Pug
+- EJS
+- Handlebars
+
+En mi opinión son los 3 más comunes, más populares, y existe buena
+posibilidad de que si te toca mantener un proyecto de express, 
+o alguien ha iniciado algo, cualquiera de estas 3 sea la opción que 
+hayan decidido utilizar.
+
+instalando pug
+--------------
+Primero tenemos que instalar pug, para eso vamos a detener el servidor
+en lo que es la consola y escribimos:
+
+   npm install --save pug
+
+   (va a hacer una dependencia del proyecto)
+
+Una vez se haya terminado de instalar, volvemos a correr el servidor con:
+   npm run start
+
+haciendo algunas modificaciones (./index.js)
+-------------------------------
+Después tenemos que abrir el archivo - ./index.js,
+si recuerdas mencioné que este archivo, en el vamos a estar trabajando,
+y es como el archivo de configuración.
+
+Y esta vez vamos a agregar 2 cosas:
+
+1°) Vamos a habilitar pug como el view-engine
+2°) Vamos a agregar la carpeta de las Vistas
+
+Muy importante, puedes ver que aquí dice crear una app en express:
+
+	// crear un app de express
+	const app = express();
+
+, por tanto debe de ser después de esta línea:
+
+	// Habilitar pug
+	app.set("view engine", "pug");
+
+Ahora creamos la carpeta views en la raíz del proyecto (./views),
+y con esto ya tenemos las carpeta controllers y views listas, solo nos faltan
+los modelos, eso lo veremos mucho más adelante.
+
+Para poder decirle a express que queremos leer esta carpeta, 
+tengo que importar algo llamado el path:
+
+	const path = require("path");
+
+path es una librería que ya existe en node, por lo tanto no tienes 
+que instalar nada; y path lo que hace es leer lo que se conoce como 
+el file system, es decir los archivos que existen en tu carpeta - 
+es una forma de acceder a ellos, y aquí le decimos que lo agregue 
+a la vistas:
+
+	// Añadir la carpeta de las vistas
+	app.set("views", path.join(__dirname, "./views"));
+
+__dirname: nos va a retornar el directorio principal - que vendría
+siendo en donde esta el ./index.js.
+
+pruebas sobre ./views
+-------------------------------
+Agregamos una vista en ./views que se llame index.pug -
+muy importante tiene que ser punto pug, no se va a utilizar 
+.html, ni nada de eso ... se va a utilizar .pug para crear 
+lo que vienen siendo los templates. 
+
+Rellenamos index.pug con:
+
+h1 Hola
+
+En ./controllers/proyectosController.js, vamos a utilizar 
+el método .render() en lugar del .send() - como parámetro recibe
+el nombre de la vista:
+
+exports.proyectosHome = (req, res) => {
+    res.render("index");
+};
+
+Eliminando ruta ./nosotros
+-----------------------------
+Eliminamos la ruta hacia ./nosotros del archivo ./routes/index.js:
+
+    router.get("/nosotros", proyectosController.nosotros);
+
+La eliminamos también del controller (./controllers/proyectosController.js):
+
+	exports.nosotros = (req, res) => {
+		res.send("Nosotros");
+	};
+
+lo que sigue
+-------------
+En el siguiente video veremos como crear lo que se como conoce
+como una Master Page, es decir una página principal que va a
+tener toda la parte del HTML para el header, los scripts, 
+enlace a hojas de estilo, entre otras cosas. 
+
+Es decir creamos el layout principal.
+
