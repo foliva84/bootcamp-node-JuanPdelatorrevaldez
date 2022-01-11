@@ -854,3 +854,144 @@ enlace a hojas de estilo, entre otras cosas.
 
 Es decir creamos el layout principal.
 
+Creando un Master Page
+------------------------------------------------------
+En el vídeo anterior ya hemos habilitado lo que son las vistas
+en nuestro proyecto.
+
+Ahora veamos la importancia de 2 cosas:
+
+1°) Por que crear un Master Layout
+2°) También veremos la parte de los archivos públicos
+
+primeros pasos
+---------------
+Primero vamos a abrir lo que vienen siendo los routes, y puedes
+ver que es nuestro controlador, tenemos lo que viene siendo
+la página principal, agreguemos una ruta a /nosotros:
+
+    router.get("/nosotros", (req, res) => {
+        res.render("nosotros");
+    });
+
+y ahora creemos la vista nosotros.pug dentro de la carpeta ./views,
+con el siguiente contenido:
+
+h1 Nosotros
+
+En ./views/index.pug reemplazamos su contenido por el siguiente:
+h1 Index
+
+importancia del layout
+-----------------------
+Es importante definir un Layout o un Master Page, por que supongamos
+que en index.pug, pones un ! (signo de exclamación), más un TAB,
+te agrega un HTML, y entonces agregamos una hoja de estilo,
+suponiendo que tiene algo así como un link (por ej a bootstrap.css),
+tendría que hacer eso mismo en todos tus archivos.
+
+Eso a la larga no es fácil de mantener, porque si tienes 50 vistas, y 
+te piden agregar una nueva hoja de estilo, tendrás que hacerlo 50 veces,
+pero si te dicen que la quites tendrás que hacer lo mismo 50 veces.
+
+Y esto se soluciona muy fácilmente con algo llamado Layout o Master Page.
+
+Es muy sencillo de crear y veremos sus ventajas.
+
+creando el layout
+-------------------
+En la raíz de la vistas vamos a crear un nuevo archivo llamado 
+layout.pug.
+
+Nota aparte, recién utilizamos el signo de exclamación más un TAB,
+y nos deplegó todo un snippet inicial de la estructura HTML
+de una página.
+
+Para poder utilizar otros snippets, en VS Code -- Extensions, 
+buscamos e instalamos la siguiente extensión:
+
+Pug/Jade snippets for VS Code
+
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="./css/bootstrap.css")
+        title Document
+    body 
+        block contenido
+
+        block despuesContenido
+
+archivo ./views/nosotros.pug
+extends layout 
+
+block contenido
+    h1 Nosotros
+
+block despuesContenido
+    h2 Yo voy después del contenido    
+
+archivo ./views/index.pug
+extends layout 
+
+block contenido
+    h1 Inicio
+
+para terminar el video
+-----------------------
+el archivo ./views/nosotros.pug lo voy a eliminar, solo 
+lo utilize para mostrarles las ventajas de utilizar una Master Page.
+
+También eliminamos la referencia a la vista nosotros desde 
+./routes/index.js:
+
+    router.get("/nosotros", (req, res) => {
+        res.render("nosotros");
+    });
+
+En ./views/layout.pug eliminamos el bloque despuesContenido.
+
+sobre los recursos de este video
+---------------------------------
+Puedes ver que en los recursos del vídeo deje un archivo llamado
+public.zip.
+
+Esta carpeta hay que abrirla, luego abrir nuestro proyecto,
+y moverla hacia el mismo.
+
+Puedes que nuestro proyectos ya tendremos:
+	- controllers
+	- un public
+	- un routes 
+	- y un views 
+
+Usualmente en esta carpeta de public vas a colocar tus archivos 
+de JavaScript, CSS, imagenes, etc, 
+
+En ./public/css vas a encontrar 2 archivos:
+	- app.css
+	- normalize.css
+
+Entonces desde ./views/layout.pug vamos a hacer referencia a estos 2 
+archivos:
+
+	link(rel="stylesheet", href="/css/normalize.css")
+	link(rel="stylesheet", href="/css/app.css")
+
+Si guardamos cambios y recargamos, puedes ver que no los toma,
+incluso si abres aquí tu consola te van a aparecer un par de errores:
+
+Refused to apply style from 'http://localhost:3000/css/normalize.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+Refused to apply style from 'http://localhost:3000/css/app.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+
+Te va a decir que no encuentra ni:
+	- normalize.css
+	- app.css
+
+Y eso es por que tenemos que ir al archivo de configuración de node, 
+y decirle en que carpeta va a encontrar esos archivos.
+
+Así que todo eso lo veremos en el próximo video.
