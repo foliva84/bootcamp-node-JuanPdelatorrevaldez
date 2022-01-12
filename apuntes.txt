@@ -1168,3 +1168,45 @@ Tenemos lista ya la nueva vista para ./nuevo-proyecto, nos hace
 falta un formulario. 
 
 Todo eso lo veremos en el próximo video.
+
+Creando el Formulario para nuevos Proyectos
+--------------------------------------------
+Continuamos con nuestro proyecto.
+
+Vamos a agregar aquí un formulario (./views/nuevo-proyecto.pug).
+
+Va a hacer un formulario muy sencillo porque solamente le vamos a 
+agregar un nombre de proyecto, y botón de submit para enviar.
+
+Entonces cuando el usuario haga click en el botón Agregar,
+nosotros tenemos que hacer algo. 
+
+Puedes ver que si nosotros abrimos nuestro ./routes/index.js,
+tenemos .get():
+
+	router.get("/nuevo-proyecto", proyectosController.formularioProyecto);
+
+.get() es cuando yo abro la página o cuando accedo a la misma.
+
+Pero cuando mandas datos por un formulario usualmente se utiliza 
+un método llamado post().
+
+Por lo tanto tenemos que venir a nuestro router, y agregar
+lo que viene siendo el router o la ruta para el post():
+
+Veamos como hacerlo en el próximo video.
+
+archivo nuevo-proyecto.pug
+---------------------------
+extends layout 
+
+block contenido
+    .contenido-principal
+        h1 #{nombrePagina}
+
+        form.agregar-proyecto
+            .campo
+                label(for="nombre") Nombre Proyecto:
+                input(type="text" id="nombre" name="nombre" placeholder="Nombre Proyecto")
+            .campo.enviar
+                input(type="submit" value="Agregar" class="boton")
