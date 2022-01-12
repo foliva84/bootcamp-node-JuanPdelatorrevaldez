@@ -1210,3 +1210,55 @@ block contenido
                 input(type="text" id="nombre" name="nombre" placeholder="Nombre Proyecto")
             .campo.enviar
                 input(type="submit" value="Agregar" class="boton")
+
+Enviando los datos de un formulario en Express
+-----------------------------------------------
+En este vídeo vamos a crear la parte del controlador, y también lo que viene 
+siendo la ruta cuando el usuario agrega aquí el nombre del proyecto, y le 
+de a agregar.
+
+Eso usualmente se hace con el método de post().
+
+Si abrimos aquí nuevo-proyecto.pug, vemos que aquí nuestro 
+form no tiene nada (es decir no tiene action), por lo tanto vamos 
+a agregarselo:
+
+	form.agregar-proyecto(action="./nuevo-proyecto" method="POST")
+
+En ./routes/index.js:
+
+	module.exports = function() {
+		router.get("/", proyectosController.proyectosHome);
+		router.get("/nuevo-proyecto", proyectosController.formularioProyecto);
+		router.post("/nuevo-proyecto", proyectosController.nuevoProyecto);
+		return router;
+	};
+
+Luego en ./controllers/proyectosController.js:
+	exports.nuevoProyecto = (req, res) => {
+		res.send("Enviaste el formulario");
+	};
+
+Por lo tanto puedes definir vistas para la parte del GET como para 
+la parte del POST, aunque sea la misma URL.
+
+Lo que viene siendo el Router se encarga de eso, puede ser 
+que la URL es la misma, pero uno reacciona a GET y no a POST, 
+y c/u tiene controladores <>.
+
+En ./controllers/proyectosController.js, vamos a quitar la 
+parte del .send():
+
+	exports.nuevoProyecto = (req, res) => {
+
+	};
+
+lo que sigue
+-------------
+En el siguiente video vamos a ver como acceder a lo que el usuario
+escriba en esta parte (parte donde se recepcionan los datos, 
+donde se envia el formulario), como podemos acceder y leer 
+esos valores, y ya nos estamos acercando un poco 
+a la parte donde vamos a insertar los registros en BD, 
+así que vamos a continuar en el próximo video, y veamos
+como leer lo que el usuario agregue en este input.
