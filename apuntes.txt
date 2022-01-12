@@ -1337,5 +1337,109 @@ y acceder a el.
 
 Asi que continuamos.
 
+Validación Simple de un Formulario
+------------------------------------
+Veamos como validar que el usuario efectivamente agregó algo aquí 
+en nuestro input.
+
+Si yo por ejemplo ahora le doy click a agregar, sin poner nada,
+puedes ver que en la terminal aparece nombre y aparece vacío.
+
+user@DESKTOP-VI2L807 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+{ nombre: '' }
+
+validando los errores
+----------------------
+Podemos acceder al nombre enviado utilizando destructuring - 
+una nueva característica de ES soportada muy bien por Node, 
+de la siguiente forma:
+
+	const { nombre } = req.body;
+
+Hay muchas formas de validar el nombre, existe un paquete 
+llamado express valid editor...
+
+Primero vamos a elaborar la validación como se dice a pie,
+y más adelante los otros proyectos van a tener lo que viene
+siendo, express validator.
+
+./controllers/proyectosController.js
+exports.nuevoProyecto = (req, res) => {
+    // Enviar a la consola lo que el usuario escriba.
+    // console.log(req.body);
+
+    // Validamos que tengamos algo en el input
+    const { nombre } = req.body;
+    
+    let errores = [];
+
+    if (!nombre) {
+        errores.push({"texto": "Agrega un Nombre al Proyecto"});
+    }
+
+    // si hay errores 
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    }
+};
+
+./views/nuevo-proyecto.pug
+extends layout 
+
+block contenido
+    .contenido-principal
+        h1 #{nombrePagina}
+        
+        if errores 
+            each error in errores 
+                .alerta.error= error.texto
+
+        form.agregar-proyecto(action="./nuevo-proyecto" method="POST")
+            .campo
+                label(for="nombre") Nombre Proyecto:
+                input(type="text" id="nombre" name="nombre" placeholder="Nombre Proyecto")
+            .campo.enviar
+                input(type="submit" value="Agregar" class="boton")
+
+Entonces si existe express validator, pero así es como haces validaciones
+como se dice a pie, sin frameworks sin nada - bueno frameworks la parte
+de express y node, pero con tu código en el controlador.
+
+Esta es una forma de hacer una validación sin tener que agregar librerías.
+Y obviamente los proyectos, los demás tendrán validacines con express validator 
+para mostrarte <> formas. 
+
+Esta es una.
+
+lo que sigue
+-------------
+¿Qué pasa si NO hay errores?
+Entonces tenemos que insertar en la BD.
+Aún no hemos configurado ninguna BD, no hemos hecho todavía esta 
+parte.
+
+Así que a partir del próximo video veremos como instalar una BD
+localmente.
+
+Elije tu plataforma ya sea Windows o MAC, estará mostrando como 
+instalar una BD local. 
+
+Si ya tienes una instalada, te puedes saltar esos videos, 
+no hay ningún problema.
+
+Así que continuamos en el próximo video.
 
 
