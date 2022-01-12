@@ -1262,3 +1262,80 @@ esos valores, y ya nos estamos acercando un poco
 a la parte donde vamos a insertar los registros en BD, 
 así que vamos a continuar en el próximo video, y veamos
 como leer lo que el usuario agregue en este input.
+
+Leyendo los datos de un formulario en Express
+-----------------------------------------------
+Veamos como leer lo que el usuario escriba en este formulario,
+va a ser importante por que de esta forma, si por ejemplo yo pongo
+Diseño de Tienda Virtual, y le doy a agregar, necesitamos
+leer ese valor para insertarlo en la base de datos.
+
+Pero también necesitamos validar un poco para que el usuario 
+no agrege algo vacio.
+
+Pues vamos a ver como hacerlo...
+
+En ./controllers/proyectosController.js, vamos a enviar 
+por consola lo que el usuario escriba:
+
+exports.nuevoProyecto = (req, res) => {
+    // Enviar a la consola lo que el usuario escriba.
+    console.log(req.body);
+};
+
+Esto se hace con req.body.
+
+Es importante que sea request, por que bueno recuerda
+request es la petición que tu haces, y en este caso 
+es algo que nosotros estamos escribiendo, y .body es 
+la forma en la que accedes a lo que va a imprimir esta 
+página, lo que va a hacer parte de la respuesta.
+
+Esto se lee en la consola pero la consola de la terminal
+
+Cuando realizamos la prueba podemos ver que nos retorna:
+
+user@DESKTOP-VI2L807 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+undefined
+
+Es decir nos devuelve undefined...
+
+¿Y esto por que pasa?
+
+Bueno para poder leer los datos de un formulario tienes que habilitar
+una librería llamada bodyParser.
+
+Por lo tanto vamos a abrir el archivo de configuración, que si recuerdas
+dije que ibamos a estar volviendo mucho a este archivo, 
+./index.js, y aquí vamos a habilitar body-parser, 
+primero lo importamos (antes instanciar express):
+
+Actualmente body-parser no se requiere instalar, anteriormente si.
+Si tienes un proyecto muy anterior a express, sino te funciona lo más
+seguro es que tengas que instalar la dependencia.
+
+const bodyParser = require("body-parser");
+
+// habilitar bodyParser para leer datos de un formulario
+app.use(bodyParser.urlencoded({extended: true}));
+
+lo que sigue
+-------------
+En el siguiente vídeo, veremos como hacer que este valor 
+que ahora recuperarmos, sea parte de nuestro controlador, 
+y acceder a el.
+
+Asi que continuamos.
+
+
+
