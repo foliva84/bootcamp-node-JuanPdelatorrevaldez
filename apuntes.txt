@@ -1622,6 +1622,29 @@ En el siguiente video vamos a instalar una herramienta que me gusta
 mucho para ver nuestras BD's de forma más visual, que se llama
 Table Plus.
 
+Instalando TablePlus
+----------------------
+Link:
+	https://tableplus.com/
+
+Necesitamos una herramienta para verificar que las operaciones que hacemos sobre la BD 
+se van realizando de forma correcta.
+
+Podríamos hacerlo directamente en el Shell de MySQL, pero sin duda,
+si vas a dedicarte de forma más profesional, lo ideal es tener un visor, digamos,
+más gráfico para no perder mucho tiempo.
+
+Uno que me gusta mucho es TablePlus. 
+
+Para MySQL existen otras opciones, por ejemplo: MySQL WordBench, pero me parece que TablePlus 
+es una excelente opción.
+
+Es gratis, con ciertas limitaciones:
+	- Solamente te permite abrir 2 tabs o 2 ventanas, 
+	  pero si quieres abrir más requieres pagar.
+
+Para completar el curso, me parece una excelente opción.
+
 
 
 
