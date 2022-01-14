@@ -1645,9 +1645,228 @@ Es gratis, con ciertas limitaciones:
 
 Para completar el curso, me parece una excelente opción.
 
+Que es un ORM
+------------------
+En este video vamos a ver que es un ORM.
+Estaremos utilizando un ORM para cada proyecto, así que es buena 
+idea saber qué son y cómo nos vamos a beneficiar de ellos.
+
+Que es un ORM - Object Relational Mapping
+Un ORM te permite almacenar / leer objetos en tu base de datos muy facilmente:
+
+- Los objetos se definen con un lenguaje de programación 
+    - En nuestro caso se define con JavaScript.
+    - Se crea un archivo que se conoce como modelo, 
+      y en el se definen la forma que van a tener estos datos.
+      Es decir, tu puedes crear o en tu aplicación tal vez es uno de manejo
+      de clientes, y es el en el ORM donde le das la forma a los objetos de cliente,
+      es decir un ID, con un Nombre, con un Apellido, con un nombre de empresa, o un 
+      teléfono de contacto.
+  Todo eso se define en el objeto del ORM, y se define con un lenguaje de programación
+
+- Relational es la Base de Datos.
+     Relational al final es lo que es la BD, entonces es donde se almacenan los objetos.
+
+- Mapping es la unión de ambos en tus aplicaciones web.
+     Esta unión es la que me permite que con código del lenguaje de programación
+     que estoy utilizando pueda realizar consultas a la BD, unir los objetos
+     con el relational, y utilizar esos datos y mostrarlos en mi aplicación.
+
+Ventaja del ORM
+----------------
+Evita la repetición de código ya que el modelo solo se define en un lugar, y solo con 
+importar el modelo al contralador, tendrás acceso a todos los métodos del ORM.
+Por ejemplo: para crear un nuevo cliente, eliminarlo, o actualizarlo, etc.
+
+Acelera el proceso de desarrollo, ya que hay una gran cantidad de métodos 
+para el CRUD (Crear, Leer, Actualizar, Eliminar) 
+  - que casi todos los proyectos hoy en día lo requieren
 
 
+No es necesario escribir código SQL.
+  - Todos los métodos por ejemplo para crear un registro ya existen en el ORM,
+    incluso para relacionar una tabla con otra, todo eso ya existe y 
+    lo veremos en detalle en el curso
 
+Seguridad
+   - Los ORM cuenta con sentencias preparadas para evitar la inyección de datos no esperados, 
+     y cuentan con una gran cantidad de medidas de seguridad que hacen que no tengas que 
+     preocuparte por esto en tus aplicaciones.
 
+Escrito en el lenguaje de tu aplicación web.
+   - Por ejemplo a <> de SQL, si estas acostumbrado a escribir algo de código SQL,
+     puedes llegar a realizar consultas muy complicadas, que tal vez no tengamos
+     conocimientos de cómo hacerlas ... el ORM se encarga de esa parte.
 
+   - Entonces no necesitas escribir código SQL, el ORM tiene una 
+	 serie de métodos que están escritos en el lenguaje de tu aplicación
 
+Desventajas del ORM
+--------------------
+  - Aprender la sintaxis nueva del ORM
+     - Uno de los detalles que veo mucho, es que cuando alguien utiliza 
+       un ORM, comienza a escribir código SQL donde se acuerda como es el 
+       SQL si es muy sencillo un SELECT lo hacen, y por ejemplo si es muy
+       complicada la consulta, deciden utilizar el ORM.
+
+       Eso no se recomienda, siempre hay que utilizar los métodos que nos provee
+       el ORM.
+
+	   Esto llega a ser un poco cansado estar viendo los ejemplos, 
+       la documentación, y encontrar las funciones que hacen lo que necesitamos.
+
+  - Instalarlo (en algunos casos es sencillo, y en otros no tanto)
+     - A veces por ejemplo instalarlo localmente llega a ser un problema,
+       instalarlo en un servidor, llega a ser incluso muy complicado.
+
+     - Afortunadamente node lo hace muy sencillo, gracias a npm
+
+  - El performance puede ser un poco más lento que consultas SQL nativas
+     - Un ORM es una capa de abstracción sobre la BD, es decir si tu utilizas un método
+       para crear un registro, el ORM se encarga de escribir el código SQL, pero tu 
+       estás escribiendo el código en el lenguaje de programación.
+
+       Por lo tanto en lo que se interpreta lo que estás haciendo y se ejecuta ese SQL,
+       puede llegar a ser un poco más ento, que si estuvieras escribiendo las consultas nativas
+       con código SQL.
+
+       Nada va a ser más rápido que una consulta nativa. El ORM va a ser un poco más lento, pero 
+       te va a permitir que no tengas que aprender mucho SQL, o si no quieres aprenderlo o simplemente
+       tienes mucha prisa en este proyecto, te va a salvar mucho tiempo 
+
+Algo muy importante es que: 
+   Un ORM no especifico de Node.
+
+Muchos lenguajes de programación tienen un ORM: 
+	- PHP: Propel y Doctrine
+	- Java = Hibernate
+	- Python = SQL Alchemy
+	- Django = tiene su propio ORM interno
+	- C# = Entity Framework       
+
+Y en realidad en muchos lenguajas vas a encontrar un ORM.
+Es una herramienta muy común que ahorra bastante tiempo.
+
+ORM's en Node
+--------------
+En cuanto a Node existen 2 opciones muy claras en cuanto a ORM's:
+   - Sequelize: soporta MySQL, PostgreSQL, SQL Server y SQL Lite en tus aplicacaciones Node.
+   - Mongoose: es otro ORM que te permite conectar MongoDB con tus aplicaciones Node
+
+Osea ya sea que decidas que tu aplicación debe utilizar una BD relacional
+o no relacional, sequelize y mongoose tienen cubierta esta parte.
+
+Modelo y ORM
+-------------
+Algo muy importante que muchas veces la palabra Modelo y ORM
+se pueden confundir un poco.
+
+Y esto pasa porque usualmente los modelos y el ORM están muy relacionados
+y puede ser posible que sea dificil de comprender que es lo que hace c/u.
+
+El modelo es un lugar único donde se describe la forma de los
+objetos y es fácil agregar / quitar campos para la BD.
+
+Mientras que el ORM tiene los métodos para la BD. 
+
+Mientras que el Modelo describe, por ejemplo la tabla de productos,
+que tiene un Id, que tiene por ejemplo un nombre, que tiene un 
+varchar de 60 caracteres el nombre, que tiene un código, que
+tiene un precio, que tipo de dato va a ser. 
+
+Toda esa parte se define en el modelo.
+
+Por otro lado el ORM cuenta con todos los método para crear 
+nuevos productos, para eliminarlos, actualizarlos, para
+realacionar productos con una categoría, para relacionar
+productos con un cliente, etc. 
+
+Entonces espero que haya quedado un poco más clara esa parte, 
+sino aquí tenemos un ejemplo.
+
+Ejemplo
+--------
+Modelo
+-------
+const Usuarios = db.define {
+    "usuarios",
+    {
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        password: {
+            type: Sequelize.STRING,
+        }
+        nombre: {
+            type: Sequelize.STRING,
+        },
+    }
+};
+
+Supongamos que tenemos un modelo de usuario, en este caso, 
+nota como estoy utilizando Sequelize para definir el tipo.
+
+Es por eso que puede ser un poco complejo la <> entre modelo y ORM.
+Pero nota como defino la estructura de modelos utilizando un lenguaje
+de programación en lugar de utilizar SQL, utilizo el lenguaje
+de programación que tengo en mi aplicación.
+
+Por otro lado tengo el ORM, pero algo importante, 
+nota como el modelo de estructura tenemos un Id,
+tenemos un password, y tenemos un nombre ...
+Faltaría un correo y muchos otros campos, que no cabian
+en este lugar.
+
+Ahora si vamos con la parte del ORM.
+
+Supongamos que quieres crear un usuario puedes ver la sintaxis:
+
+CREAR USUARIO:
+
+const usuario = {
+   password,
+   nombre
+};
+
+Usuarios.create(usuario);
+
+Nota como este usuario que esta aquí, es el mismo nombre del modelo
+Usuarios; entonces de esa forma sabe en que partes se tienen que insertar
+los datos.
+
+Luego utilizamos .create() le pasamos el objeto de usuario, y eso hace
+que se inyecte, que se agregue en lo que viene siendo la BD.
+
+Así de sencillo es crear un nuevo registro utiliando un ORM.
+
+Este ejemplo utiliza Sequelize, pero con Mongoose es muy similar.
+
+Algo importante no escribes por ejemplo, INSERT INTO y después colocas los valores.
+
+Nada de eso se hace en esta parte, el ORM se encarga de todo.
+
+Y por ejemplo para obtener un usuario:
+
+Usuario.findOne({
+   where: {
+      email
+   }
+});
+
+En este caso estamos utilizando uno de los métodos del ORM.
+
+Entonces la <> aquí, lo que quiero que te lleves:
+   - El modelo da la estructura de los datos
+   - El ORM nos da todos los métodos para trabajar o consultar la BD
+
+Estas son cosas que no se aprenden como una diapositiva, por eso 
+yo recomiendo que veas lo que vien siendo el primer proyecto, 
+lo finalizes, y de ahí vuelvas a ver este vídeo.
+
+Seguramente toda va a quedar mucho más claro.
+
+De nueva cuenta los ORMs utilizados en este curso van a ser:
+ - Sequelize en 2 proyectos, 
+ - y también Mongoose
