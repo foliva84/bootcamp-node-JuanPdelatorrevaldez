@@ -1936,3 +1936,25 @@ parte del deployement (dependencias del proyecto):
 
 npm install --save mysql2 sequelize
 
+================================================================================
+========================= NOTA IMPORTANTE ======================================
+================================================================================
+El curso esta realizado las siguientes versiones de mysql2 y sequelize.
+
+mysql2 --> 1.6.4
+
+sequelize --> 4.42.0
+
+Para mas info ver el package.json del proyecto final en el repositorio del autor:
+https://github.com/juanpablogdl/uptasknode/blob/master/package.json
+
+
+Entonces vamos a ejecutar el siguiente comando npm para obtener estas versiones
+específicas, siguiendo la siguiente sintaxis:
+
+npm install --save <package>@<version>
+
+npm install --save mysql2@1.6.4
+
+npm install --save sequelize@4.42.0
+
