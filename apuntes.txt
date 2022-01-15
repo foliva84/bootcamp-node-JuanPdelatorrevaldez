@@ -2036,8 +2036,8 @@ const Proyectos = db.define('proyectos', {
         primaryKey: true,
         autoIncrement: true
     },
-    nombre: type: Sequelize.STRING,
-    url: type: Sequelize.STRING
+    nombre: Sequelize.STRING,
+    url: Sequelize.STRING
 });
 
 module.exports = Proyectos;
@@ -2205,4 +2205,109 @@ db.sync()
     .catch(error => console.log(error))
 
 Algo muy importante, tienes que importar primero el modelo, 
-para que sepa que va a crear 
+para que sepa que va a crear.
+
+// Importar el modelo 
+require("./models/Proyectos");
+
+Archivo ./index.js
+// import express from "express"; // no soportada por express por DEFAULT
+const express = require("express");
+const routes = require("./routes");
+const path = require("path");
+const bodyParser = require("body-parser");
+
+// Crear la conexión a la BD
+const db = require ("./config/db");
+
+// Importar el modelo 
+require("./models/Proyectos");
+
+db.sync()
+    .then(() => console.log("Conectado al Servidor"))
+    .catch(error => console.log(error))
+
+// crear un app de express
+const app = express();
+
+// Donde cargar los archivos estáticos
+app.use(express.static("public"));
+
+// Habilitar pug
+app.set("view engine", "pug");
+
+// Añadir la carpeta de las vistas
+app.set("views", path.join(__dirname, "./views"));
+
+// habilitar bodyParser para leer datos de un formulario
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use("/", routes());
+
+app.listen(3000);
+
+Si paramos y ejecutamos nuevamente la aplicación desde la terminal podemos ver:
+foliva@ARRMRLAP005 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+Executing (default): CREATE TABLE IF NOT EXISTS `proyectos` (`id` INTEGER auto_increment , `nombre` VARCHAR(255), `url` VARCHAR(255), PRIMARY KEY (`id`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `proyectos`
+Conectado al Servidor
+
+Podemos ver que dice que crea la tabla proyectos, en caso de que no exista con un Id, y con toda
+la estructura que le hemos dado:
+
+  - viene el nombre: le di un VARCHAR de 255 ( no hay ningún problema )
+  - url: VARCHAR de 255
+  - y un PK: que lo pone al Id, etc.
+
+Si abrimos de nueva cuenta el Table Plus, por ejemplo aquí vamos a seleccionar
+la BD uptasknode, damos Open.
+
+Y puedes ver que aquí viene la tabla proyectos, la cual esta vacía, aún 
+no hemos agregado nada, pero tenemos el Id, el nombre, y la url.
+
+Por lo tanto Sequelize por si solo, puedes definir tu modelo.
+
+Archivo ./models/Proyectos.js
+const Sequelize = require("sequelize");
+
+const db = require("../config/db");
+
+const Proyectos = db.define('proyectos', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    nombre: Sequelize.STRING,
+    url: Sequelize.STRING
+});
+
+module.exports = Proyectos;
+
+Y con este método de .sync():
+// Importar el modelo 
+require("./models/Proyectos");
+
+db.sync()
+    .then(() => console.log("Conectado al Servidor"))
+    .catch(error => console.log(error))
+
+Te va a crear toda la estructura!
+
+lo que sigue
+-------------
+Estaremos volviendo a esta parte un poco más adelante, pero 
+ya tenemos nuestra BD conectada con todo listo
+
+El siguiente paso es volver a la aplicación y ver como vamos a 
+insertar los registros en la BD.

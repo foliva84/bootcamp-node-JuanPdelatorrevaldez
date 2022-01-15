@@ -8,8 +8,8 @@ const Proyectos = db.define('proyectos', {
         primaryKey: true,
         autoIncrement: true
     },
-    nombre: type: Sequelize.STRING,
-    url: type: Sequelize.STRING
+    nombre: Sequelize.STRING,
+    url: Sequelize.STRING
 });
 
 module.exports = Proyectos;
