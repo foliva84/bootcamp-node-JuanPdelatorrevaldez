@@ -1870,3 +1870,26 @@ Seguramente toda va a quedar mucho más claro.
 De nueva cuenta los ORMs utilizados en este curso van a ser:
  - Sequelize en 2 proyectos, 
  - y también Mongoose
+
+Instalando y Configurando Sequelize
+--------------------------------------
+En nuestro proyecto actualmente lo único que nos hace falta, puedes ver que tenemos
+pero nos falta mucho, pero de la parte del MVC del Model View Controller ya tenemos,
+el Controller y las Vistas.
+
+Entonces falta la parte de los modelos.
+
+Usualmente los modelos es esa capa que interactúa directamente con la BD.
+Por lo tanto vamos a abrir el Chrome en:
+
+http://docs.sequelizejs.com
+
+https://sequelize.org/v7/
+
+Estaremos utilizando una herramienta llamada Sequelize.
+
+Sequelize soporta bases de datos: 
+  - PostgreSQL
+  - MySQL
+  - SQL Lite
+  - MSSQL
