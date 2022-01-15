@@ -2056,3 +2056,153 @@ lo que sigue
 -------------
 Con eso esta listo este modelo ... lo vamos a probar tanto el modelo, 
 como la conexión en el siguiente vídeo.
+
+Permitiendo que Sequelize Genere las Tablas Automáticamente
+--------------------------------------------------------------
+En este vídeo vamos a probar nuestra conexión hacia el servidor de MySQL.
+
+Por lo tanto vamos a abrir el index.js (./), y vamos a insertar la siguiente línea 
+- antes o después de se crea express, ya que no require lo que viene siendo express:
+
+// Crear la conexión a la BD
+const db = require ("./config/db");
+
+Este db va a contener <> métodos, si le pones db punto, aquí te aparece una serie de métodos, 
+de los cuales vamos a usar autenticate():
+
+db.autenticate();
+
+Esto nos va a retornar un Promise, quiero mostrarte algo ...
+
+Si abres la página principal de sequelize:
+
+https://sequelize.org/v4/
+
+Puedes ver que aqui dice que Sequelize es un ORM basado en Promises:
+
+Sequelize is a promise-based ORM for Node.js  ...
+
+Por lo tanto accedes a los resultados con .then(), y esto va a correr una arrow function, y aquí podemos 
+correr un console.log con un mensaje avisando que se conecto a la BD;
+y caso contrario caería en un catch (error también es una arrow function, 
+pero como tiene un solo parámetro prescindimos de los paréntesis):
+
+db.authenticate()
+    .then(() => console.log("Conectado al Servidor"))
+    .catch(error => console.log(error))
+
+Nos conectamos al nuestro servidor de MySql con TablePlus y ejecutamos
+la siguiente instrucción SQL:
+
+create DATABASE uptasknode;
+
+En archivo ./config/db.js, al final del mismo realizamos el module.exports:
+const Sequelize = require('sequelize');
+const db = new Sequelize('uptasknode', 'root', 'root', {
+  host: '127.0.0.1',
+  dialect: 'mysql',
+  port: '3306',
+  operatorsAliases: false,
+  define: {
+    timestamps: false 
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
+
+module.exports = db;
+
+Si ahora corremos nuestro proyecto:
+foliva@ARRMRLAP005 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+Executing (default): SELECT 1+1 AS result
+Conectado al Servidor
+
+Listo! Ya estamos conectado a nuestro servidor de BD MySQL!
+
+================================================================================
+========================= NOTA IMPORTANTE ======================================
+================================================================================
+En este momento del video el autor comenta lo siguiente:
+Una vez que guardas cambios, puedes ver que nos aparece este mensaje:
+
+code: 'ER_NOT_SUPPORTED_AUTH_MODE',
+eerno: 1251,
+sqlState: '08004',
+sqlMessage: 
+ 'Client does not support authentication protocol requested by server; considerer upgrading MySQL client' 
+
+y sigue comentando:
+si recuerdas casi al inicio cuando instalamos MySQL, nos preguntaba si queríamos
+utilizar el nuevo método de encriptación o el anterior.
+
+Yo cuando estuve instalandolo para hacer pruebas, y me decía que anterior, 
+bueno lo seleccionaba y me volvió a preguntar, y me volvió a preguntar,
+hasta que seleccioné el nuevo y me dejó ya continuar la instalación. 
+
+En este caso puedes ver como que el nuevo no funciona aún.
+
+Vamos a abrir una nueva terminal y vamos a escribir:
+mysql -u root -p 
+Enter password: ****
+
+En el gis que comparti anteriormente venía esta pieza de código:
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysq_native_password BY 'password';
+FLUSH PRIVILEGES;
+
+Luego de ejecutado este código en el consola, detenemos la aplicación 
+y volvemos a ejecutarla.
+
+Y vas a ver que nos va a devolver:
+
+code: 'ER_BAD_DB_ERROR',
+eerno: 1049,
+sqlState: '42000',
+sqlMessage: 
+ "Unknown database 'uptasknode'" 
+
+Es decir base de datos desconocida.
+Ahora entonces vamos a Table Plus y creamos la base de datos uptasknode.
+
+Detenemos el servidor de la aplicación, y lo ejecutamos de nuevamente.
+
+Puedes ver que dice conectado al servidor:
+
+Executing (default): SELECT 1+1 AS result
+Conectado al Servidor
+
+
+================================================================================
+========================= CONTINUEMOS ... ======================================
+================================================================================
+Eso usualmente esta mucho mejor, ya creamos la base de datos ...
+Pero puedes ver que si abro mi modelo en el archivo
+./models/Proyectos.js, puedes ver que le dice cierta estructura,
+un Id, un nombre, una URL. 
+
+Entonces podemos utilizar Sequelize para que cree esa estructura de la BD
+muy fácilmente.
+
+Vamos abrir el ./index.js, y en lugar de tener 
+authenticate(), que solamente se va a conectar al servidor,
+podemos utilizar .sync().
+
+db.sync()
+    .then(() => console.log("Conectado al Servidor"))
+    .catch(error => console.log(error))
+
+Algo muy importante, tienes que importar primero el modelo, 
+para que sepa que va a crear 
