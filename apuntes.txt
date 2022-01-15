@@ -2002,3 +2002,57 @@ lo que sigue
 En el siguiente video veamos como definir los modelos. 
 Vamos a crear el modelo de proyectos, así que continamos en
 el próximo video.
+
+Creando el modelo de Proyectos
+--------------------------------
+En este vídeo vamos a craer un modelo que va a ser el de los proyectos, por lo tanto
+vamos a crear dentro la raíz del proyecto una nueva carpeta llamada models:
+
+uptasknode
+  -- models
+
+Ahora si tenemos el Model, View, Contoller listo!
+
+Usualmente los modelos siempre se nombre con mayúsucla la primera letra, 
+por lo tanto aquí ponemos Proyectos.js:
+
+uptasknode
+  -- models
+     -- Proyectos.js
+
+Y usualmente es en el modelo donde vas a colocar toda la descripción de los campos de tu BD.
+
+Vamos a encontrar buena información aquí en Model definition, ahorita lo vemos:
+https://sequelize.org/v4/manual/tutorial/models-definition.html
+
+Archivo ./models/Proyectos.js:
+const Sequelize = require("sequelize");
+
+const db = require("../config/db");
+
+const Proyectos = db.define('proyectos', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    nombre: type: Sequelize.STRING,
+    url: type: Sequelize.STRING
+});
+
+module.exports = Proyectos;
+
+Como puedes ver la última línea de Proyectos.js es:
+module.exports = Proyectos;
+
+Con esta línea hacemos que todo el código que esta en Proyectos.js,
+se pueda importar en otras piezas de nuestro proyecto.
+
+Tenemos por ejemplo utilizando este modelo aquí en la parte princinpal
+(./index.js), y también en los controladores para hacer consultas a las
+BD, y pasar los resultados hacia las vistas.
+
+lo que sigue
+-------------
+Con eso esta listo este modelo ... lo vamos a probar tanto el modelo, 
+como la conexión en el siguiente vídeo.
