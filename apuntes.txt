@@ -1958,3 +1958,47 @@ npm install --save mysql2@1.6.4
 
 npm install --save sequelize@4.42.0
 
+================================================================================
+========================= CONTINUEMOS ... ======================================
+================================================================================
+
+El siguiente paso es crear la configuración de sequelize.
+
+Damos clic aquí en la primera opción, por que aquí nos viene el archivo de configuración:
+
+https://sequelize.org/v4/manual/installation/getting-started#setting-up-a-connection
+
+Vamos a volver a nuestro proyecto, y aquí voy a crear una nueva carpeta 
+- en la raíz del proyecto, que voy a llamar config (ahi voy a crear
+toda la configuración), y luego un archivo llamado db.js.
+
+uptasknode
+  -- config
+     -- db.js
+
+Archivo ./config/db.js
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('uptasknode', 'root', 'root', {
+  host: '127.0.0.1',
+  dialect: 'mysql',
+  port: '3306',
+  operatorsAliases: false,
+  define: {
+    timestamps: false 
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
+
+Y este es el archivo de configuración, así es como conectas 
+Node con una BD de MySQL.
+
+lo que sigue
+-------------
+En el siguiente video veamos como definir los modelos. 
+Vamos a crear el modelo de proyectos, así que continamos en
+el próximo video.
