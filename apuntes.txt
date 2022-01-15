@@ -1884,7 +1884,7 @@ Por lo tanto vamos a abrir el Chrome en:
 
 http://docs.sequelizejs.com
 
-https://sequelize.org/v7/
+https://sequelize.org/v4/
 
 Estaremos utilizando una herramienta llamada Sequelize.
 
@@ -1893,3 +1893,46 @@ Sequelize soporta bases de datos:
   - MySQL
   - SQL Lite
   - MSSQL
+
+Estaremos utilizando también Sequelize en un proyecto que viene más adelante con PostgreSQL,
+y estaremos creando otro proyecto con Mongo DB, que también tiene un ORM llamado Mongoose.
+
+¿Cuál es la ventaja de utilizar Sequelize?
+Por ejemplo donde tenemos aquí en Querying damos click:
+
+https://sequelize.org/v4/manual/tutorial/querying.html
+
+Puedes ver que para obtener todos los registros de la BD solamente se utilizan
+estos métodos:
+
+Model.findAll({
+  attributes: ['foo', 'bar']
+});
+
+Lo cual viene a reemplazar a una consulta SELECT.
+
+También tienen esta parte de los modelos:
+
+https://sequelize.org/v4/manual/tutorial/models-usage.html
+
+Los modelos van a describir como funciona tu base de datos.
+Es decir si tienes por ejemplo en el proyecto que estamos haciendo, 
+aquí un nuevo proyecto.
+
+Supongamos que creas una nueva tabla en tu base de datos para almacenar
+los proyectos, tienes un Id, el nombre del proyecto, y en nuetro caso estaremos
+almacenando la URL - te voy a explicar por qué un poco más adelante.
+
+Esa parte de todas las tablas y las columnas es que se conoce como modelos.
+
+En ellos vas a definir cómo se llama la tabla, qué campos contiene, 
+y qué tipos son.
+
+Vamos a empezar este proyecto, aquí en terminal, voy a detener el servidor de Node.
+Vamos a instalar un par de dependencias.
+mysql2 es una dependencia de node, y también vamos a instalar sequelize, ambas 
+son dependencias no del desarrollo, porque tienen  que ir con el servidor, o tienen que ser
+parte del deployement (dependencias del proyecto):
+
+npm install --save mysql2 sequelize
+
