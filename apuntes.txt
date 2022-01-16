@@ -2311,3 +2311,169 @@ ya tenemos nuestra BD conectada con todo listo
 
 El siguiente paso es volver a la aplicación y ver como vamos a 
 insertar los registros en la BD.
+
+12.36 Insertando Registros con Sequelize y Promises
+------------------------------------------------------
+En el video anterior vimos como utilizar .sync(), y cómo definimos la estructura de la BD
+en nuestro modelo, nos ha creado lo que viene sinedo las tablas, con los tipos de campos que 
+hemos definido.
+
+Esa parte ya esta.
+
+El siguiente paso es ver como insertar un registro en la BD.
+
+Vamos abrir lo que viene siendo Visual Studio Code, y vamos a abrir el lo que es el 
+controlador de proyectosController.js (./controllers).
+
+En esta parte:
+
+exports.nuevoProyecto = (req, res) => { //... };
+
+tenemos nuevoProyecto que si recuerdas viene siendo aquí en el router (./routes/index.js)
+tenemos nuevoProyecto:
+
+module.exports = function() {
+    router.get("/", proyectosController.proyectosHome);
+    router.get("/nuevo-proyecto", proyectosController.formularioProyecto);
+    router.post("/nuevo-proyecto", proyectosController.nuevoProyecto);
+    return router;
+};
+
+cuando enviamos una petición POST, es decir llenamos este formulario y le damos click
+en Agregar.
+
+Tenemos la parte de la validación, si abrimos denueva cuenta proyectosController.js (./controllers),
+realizamos una validación muy sencilla en realidad nada así super profundo;
+y vemos que tenemos esta parte cuando hay errores, y en caso de que no haya 
+errores tenemos que insertar en la BD, y Sequelize nos da un método que lo hace muy 
+sencillo:
+
+exports.nuevoProyecto = (req, res) => {
+    // Enviar a la consola lo que el usuario escriba.
+    // console.log(req.body);
+
+    // Validamos que tengamos algo en el input
+    const { nombre } = req.body;
+    
+    let errores = [];
+
+    if (!nombre) {
+        errores.push({"texto": "Agrega un Nombre al Proyecto"});
+    }
+
+    // si hay errores 
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    } else {
+        // No hay errores
+        // Insertar en la BD
+    }
+};
+
+Cambios en ./controllers/proyectosController.js
+Primero tengo que importar mi modelo.
+SI recuerdas todas las interraciones de la BD son por medio del modelo y como mencioné 
+anteriormente, el controlador es el que se encarga de conectarse con el modelo para realizar
+ciertas operaciones:
+
+const Proyectos = require ("../models/Proyectos");
+
+Debido a que el modelo ya tiene toda la conexión a la BD, 
+va a traer ese método para crear un nuevo registro.
+
+Por lo tanto copiamos este nombre (Proyectos), y aquí abajo (en el else de No hay errores), ponemos:
+
+Proyectos.create({ nombre });
+
+Puedes ver nuestra estructura, tenemos lo que vien siendo el Id - ese se va a generar automáticamente,
+luego tenemos el nombre, y viene esta parte de la URL, que estaremos viendo un poco más adelante 
+como generarla y por qué.
+
+Por lo tanto solamente vamos a pasar esta variable de nombre hacia esta parte.
+
+Si recuerdas mencioné anteriormtne que lo que viene siendo Sequelize es un 
+ORM basado en Promises, por lo tanto la línea anterior nos va a devolver
+un Promise, .then() en caso de que sea exitoso, caso contrario vamos a poner un catch,
+y vamos a tomar un error:
+
+    // si hay errores 
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    } else {
+        // No hay errores
+        // Insertar en la BD
+        Proyectos.create({ nombre })
+            .then(() => console.log("Insertado correctamente"))
+            .catch(error => console.log(error))
+    }
+
+Si guardamos cambios y abrimos proyecto, y en la pantalla de Nuevo Proyecto, en el campo
+Nombre Proyecto ponemos: 
+
+Tienda Virtual
+
+y si abrimos lo que viene siendo la terminal, peudes ver que se ha insertado correctamente
+
+foliva@ARRMRLAP005 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 2.0.15
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+Executing (default): CREATE TABLE IF NOT EXISTS `proyectos` (`id` INTEGER auto_increment , `nombre` VARCHAR(255), `url` VARCHAR(255), PRIMARY KEY (`id`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `proyectos`
+Conectado al Servidor
+Executing (default): INSERT INTO `proyectos` (`id`,`nombre`) VALUES (DEFAULT,'Tienda Virtual');
+Insertado correctamente
+
+Ahora este método que está aquí de .create(), puedes ver que aquí te dice que va a insertar:
+
+Executing (default): INSERT INTO `proyectos` (`id`,`nombre`) VALUES (DEFAULT,'Tienda Virtual');
+
+Esta es la instrucción de MySQL, pero puedes ver lo que vien siendo el solamente toma esta sintaxis:
+
+        // Insertar en la BD
+        Proyectos.create({ nombre })
+            .then(() => console.log("Insertado correctamente"))
+            .catch(error => console.log(error))
+
+pero al final lo traduce en esto: 
+INSERT INTO `proyectos` (`id`,`nombre`) VALUES (DEFAULT,'Tienda Virtual');
+
+Entonces sin dudas vas a encontrar muchos beneficios al implementar un ORM.
+
+Ya en TablePlus para poder ver los registros, solamente dale click en esta parte que parece
+como el botón de actualizar, y puedes ver que aparece el registro que recién insertamos
+(Tienda Virtual).
+
+Lo que viene siendo la URL, tengo en mente crear lo que vienen siendo las URLs limpias,
+en lugar de que por ejemplo diga:
+
+/proyectos/1
+/proyectos/2
+/proyectos/3
+
+Aparezca algo similar a lo que está aquí:
+
+/proyectos/Tienda Virtual
+
+Lo veremos un poco más a detalle más adelante.
+
+lo que sigue
+--------------
+Puedes ver que nuestro proyecto ya inserta en la BD.
+Usualmente una de las grandes ventajs o mejor dicho de las nuevas versiones de Node, 
+es que ya tiene soporte a Async  / Await.
+
+Así que veremos como hacer esta parte Async  / Await en el próximo video.
