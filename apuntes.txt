@@ -2563,3 +2563,74 @@ lo que sigue
 En el siguiente video veremos como habilitar express validator, que va a tener 
 estos métodos para que la información que entra a la BD, entre limpia,
 lo que se conoce como Sanitizar los campos.
+
+12.38 Sanitizar Entradas de Datos antes de almacenarlos en la BD
+---------------------------------------------------------------------
+Continuamos con el desarrollo de este proyecto. 
+Puedes ver que en el vídeo anterior, insertamos un registro que tiene espacios más
+algunos caracteres extraños, y por ejemplo si alguien agrega por los espacios,
+nuestra validación que hicimos es muy sencilla, la estaríamos pasando.
+
+Puedes utilizar por ejemplo un método de JavaScript, por ejemplo, puedes 
+aplicarle un trim() que remueva todo lo que viene siendo los espacios en blanco, 
+entre muchas cosas más.
+
+Puedes hacerlo tu, pero una de las grandes ventajas de npm y de Node, 
+es que puedes instalar un paquete.
+
+Los paquetes que vas a encontrar en npm son seguros.
+Algunas veces vas a encontrar alguno que tiene vulnerabilidades, 
+pero son paquetes probados, y si hay alguna vulnerabilidad, 
+es solucionada rapidamente. 
+Entonces puedes utilizarlo con confianza. 
+
+Nota:
+    npm install --save express-validator
+
+    Instala la última versión de express-validator
+
+Voy a instalar la misma que el autor tiene en el proyecto final, 
+que viene siendo la versión 5.3.1
+
+npm install --save express-validator@5.3.1
+
+Otras notas importantes
+--------------------------
+Ejecutar los siguientes comandos:
+npm uninstall --save express
+npm uninstall --save-dev nodemon
+npm uninstall --save pug
+
+npm install --save express@4.16.4
+npm install --save-dev nodemon@1.18.9
+npm install --save pug@2.0.3
+
+Realizando estas instalaciones/des-instalaciones, vamos a dejar las 
+dependencias en las versiones correspondientes a las mismas 
+que usa el autor en este proyecto:
+
+https://github.com/juanpablogdl/uptasknode/blob/master/package.json
+
+Nuestro archivo package.json va a quedar como a continuación:
+{
+  "name": "uptasknodejs",
+  "version": "1.0.0",
+  "description": "Proyecto UpTask con Node y MVC",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./index.js"
+  },
+  "author": "Fernando Oliva",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "mysql2": "^1.6.4",
+    "pug": "^2.0.3",
+    "sequelize": "^4.42.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
+
