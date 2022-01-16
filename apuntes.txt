@@ -2477,3 +2477,89 @@ Usualmente una de las grandes ventajs o mejor dicho de las nuevas versiones de N
 es que ya tiene soporte a Async  / Await.
 
 Así que veremos como hacer esta parte Async  / Await en el próximo video.
+
+12.37 Insertando Registros con Sequelize y Asynch / Await
+----------------------------------------------------------
+En este video veremos cómo implementar Async / Await a lo que viene siendo estas consultas de BD.
+Como mencioné anteriormente, lo que vien siendo Sequelize es un ORM basado en Promises,
+por lo tanto tienes esta sintaxis de:
+
+        // Insertar en la BD
+        Proyectos.create({ nombre })
+            .then(() => console.log("Insertado correctamente"))
+            .catch(error => console.log(error))
+
+.create(), y luego el .then() y el catch() en caso de error.
+
+Puedes hacerlo un poco más pequeño el código utilizando Async / Await, y además de que tu 
+performance en tu aplicación va a ser mucho mejor, 
+porque Async / Await va a ejecutar una acción y va a detener el código - lo va a bloquear
+de continuar ejecutándose hasta que se finalize esa acción.
+
+Y eso es muy bueno en la mayoría de las veces que estás trabajando con BD's, porque a veces haces 
+un SELECT de 500 registros, tarda más que un SELECT de 5 registros o una inserción de un registro.
+
+Entonces Async / Await maneja esa parte del tiempo que va a tardar la ejecución automáticamente, y eso 
+nos lleva a un mejor perfomance. 
+
+Todas tus consultas que tengan que ver con una BD en Node es recomendable que las tengas con Async / Await.
+
+Y es muy sencillo, de hecho el código va a ser más corto.
+Primero aquí tenemos este nuevo proyecto:
+
+export.nuevoProyecto = (req, res) => { 
+      // ...
+ }; 
+
+le decimos que esta función va a ser asícrona o async:
+
+export.nuevoProyecto = async (req, res) => { 
+      // ...
+ }; 
+
+En esta parte donde tenemos Proyectos.create():
+        // Insertar en la BD
+        Proyectos.create({ nombre })
+            .then(() => console.log("Insertado correctamente"))
+            .catch(error => console.log(error));
+
+el then() y catch() lo eliminamos, y lo reemplazamos por:
+const proyecto = await Proyectos.create({ nombre });
+
+Luego al final vamos a hacer un redirect, como parte de la respuesta - res,
+y una vez que se inserte que me lleve a la home:
+
+    res.redirect("/");
+
+Eso es todo lo que tienes que hacer.
+
+En mi aplicación en /nuevo-proyecto vamos a poner algo así como:
+
+Diseño de Logotipo 
+
+y le damos clic en Agregar.
+
+Puedes ver que eso me redirije a la home: http://localhost:3000/
+
+Y si de nueva cuenta abro TabloPlus y actualizo aquí, puedes ver que ya tengo <> registros.
+Aquí se insertó el de Tienda Virtual más de una vez, por que si le das recargar a la web
+(http://localhost/nuevo-proyecto), va a volver a enviar el request.
+
+Pero bueno ya tenemos 3 registros, no hay ningún problema.
+
+La validación que tenemos aquí es muy simple, puedes ver que nada más revisamos que el usuario 
+haya escrito algo, pero si por ejemplo si alguien - le voy a dar clic en Nuevo Proyecto, 
+agrega un proyecto y nos quiere poner así como entidades extrañas, digamos que agregan 
+espacios y agregan algo así como +Hola:
+
+       +Hola´
+
+y le damos agregar, puedes ver que eso lo va a insertar en la BD.
+
+Aparece Hola y con los espacios. 
+
+lo que sigue
+------------------
+En el siguiente video veremos como habilitar express validator, que va a tener 
+estos métodos para que la información que entra a la BD, entre limpia,
+lo que se conoce como Sanitizar los campos.
