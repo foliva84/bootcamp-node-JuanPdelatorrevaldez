@@ -17,7 +17,8 @@ exports.nuevoProyecto = async (req, res) => {
     // console.log(req.body);
 
     // Validamos que tengamos algo en el input
-    const { nombre } = req.body;
+    // const { nombre } = req.body;
+    const nombre = req.body.nombre;
     
     let errores = [];
 

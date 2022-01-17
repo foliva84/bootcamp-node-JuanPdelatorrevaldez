@@ -2584,7 +2584,10 @@ pero son paquetes probados, y si hay alguna vulnerabilidad,
 es solucionada rapidamente. 
 Entonces puedes utilizarlo con confianza. 
 
-Nota:
+================================================================================
+========================= NOTA IMPORTANTE ======================================
+================================================================================
+
     npm install --save express-validator
 
     Instala la última versión de express-validator
@@ -2593,6 +2596,10 @@ Voy a instalar la misma que el autor tiene en el proyecto final,
 que viene siendo la versión 5.3.1
 
 npm install --save express-validator@5.3.1
+
+================================================================================
+========================= OTRAS NOTAS IMPORTANTES ==============================
+================================================================================
 
 Otras notas importantes
 --------------------------
@@ -2634,3 +2641,119 @@ Nuestro archivo package.json va a quedar como a continuación:
   }
 }
 
+================================================================================
+========================= CONTINUEMOS ... ======================================
+================================================================================
+Ahora no validas en el controlador, validas en Router.
+
+Entonces vamos abrir el router en ./routes/index.js.
+
+Y aqui arriba vamos a importar express-validator:
+
+// importar express validator
+const { body } = require("express-validator/check");
+
+¿Por que body? No pretendo aburrirte mostrándote la documentación:
+
+https://express-validator.github.io/docs/5.3.1/check-api.html
+
+pero una de las ventajas que tienes express-validator es que puede revisar el body,
+cookies, el header, params o query.
+
+Es decir, en lo que viene siendo params o query, es por ejemplo cuando vas a actualizar o eliminar
+un registro, o por ejemplo una REST API puedes validar esos parámetros que estás enviando al servidor.
+
+Pero nosotros estamos aquí nada más revisando (en ./controllers/proyectosController.js) o estamos haciendo
+un req.body:
+
+const nombre = req.body.nombre;
+
+por eso es que importamos body en ./routes/index.js.
+
+Dependiendo lo que quieras validar sería lo que utilizarías aquí (en routes).
+
+// importar express validator
+const { body } = require("express-validator/check");
+
+check va a hacer una función que va a tener todos los objetos
+que nos van a servir para revisar lo que queremos hacer.
+
+Y aquí abajo donde tenemos este post:
+
+router.post("/nuevo-proyecto", proyectosController.nuevoProyecto);
+
+Es donde agregamos los métodos.
+
+Tiene que ser antes del controlador, porque la forma en la que Node va ejecutar esto, 
+por ejemplo puedes tener <> controladores, por ejemplo:
+
+router.post("nuevo-post",
+     proyectosController.nuevoProyecto1,
+     proyectosController.nuevoProyecto);
+
+revisaría primero nuevoProyecto1 y luego nuevoProyecto.
+
+Es similar a - aún lo hemos hecho, pero cuando tengamos la parte de 
+autenticación de usuarios, vamos a revisar que:
+
+   - un usuario este autenticado, 
+   - y después le vamos a mostrar el contenido
+
+Entonces Node ejecuta de arriba hacia abajo.
+
+Por lo tanto tienes que ser antes de este controlador - proyectosController.nuevoProyecto.
+
+router.post("/nuevo-proyecto", 
+	body("nombre").not().isEmpty().trim().escape(),
+	proyectosController.nuevoProyecto);
+
+En estos links vas a encontrar buena información:
+https://express-validator.github.io/docs/5.3.1/custom-validators-sanitizers.html
+https://express-validator.github.io/docs/5.3.1/sanitization.html
+
+En el link de Sanitization puedes encontrar como validar que un email sea válido,
+y luego normalizalo es decir quitarle los caracteres que puedan ser problemáticos, 
+entre muchas otras cosas.
+
+Es una librería bastante completa.
+
+Se va a ejecutar esta línea, va a revisar lo que viene siendo el body, ejecuta todas estas funciones,
+y después ya se pasa al controlador:
+
+router.post("/nuevo-proyecto", 
+	body("nombre").not().isEmpty().trim().escape(),
+	proyectosController.nuevoProyecto);
+
+Veamos si es cierto vamos a:
+
+http://localhost/nuevo-proyecto/
+
+Y vamos a poner en Nombre Proyecto, de nueva cuenta el mismo ejemplo, 
+muchos espacios y un Hola:
+
+      Hola/*
+
+le doy click en Agregar.
+
+Y cuando vamos a TablePlus puedes ver que lo ha sanitizado, lo insertó de la sig.
+forma:
+
+Hola&#x2F;*
+
+Sanitizado signfica que le quita sus caracteres - signo de mayor que y de menor que, 
+y le elimina también los espacios, y estos son caracteres que se ven extraños que se
+ven extraños aquí, pero ya no son algo que vaya a hacer daño
+una vez que imprimamos este valor de vuelta.
+
+Si alguien coloca un script o algo similar, ya no se va a ejecutar como tal.
+
+Entonces de esta forma puedes usar express validator.
+
+Puedes ver que en la tabla Proyectos tengo los ID's 1, 2, 3, 4 y luego se salta al 9,
+por algunas pruebas que hize.
+
+lo que sigue
+-----------------
+La URL esta vacía, la tenemos en NULL, esta parte yo quiero que la
+genere automáticamente express, así que veamos como hacerlo en el 
+siguiente vídeo.
