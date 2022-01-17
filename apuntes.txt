@@ -2601,8 +2601,6 @@ npm install --save express-validator@5.3.1
 ========================= OTRAS NOTAS IMPORTANTES ==============================
 ================================================================================
 
-Otras notas importantes
---------------------------
 Ejecutar los siguientes comandos:
 npm uninstall --save express
 npm uninstall --save-dev nodemon
@@ -2757,3 +2755,215 @@ lo que sigue
 La URL esta vacía, la tenemos en NULL, esta parte yo quiero que la
 genere automáticamente express, así que veamos como hacerlo en el 
 siguiente vídeo.
+
+12.39 Generando una URL de Proyecto
+-------------------------------------
+Vamos a generar una URL única para c/u de los <> proyectos que tenemos aquí.
+
+Puedes ver que tenemos en la BD un campo reservado para las URL's, no hemos insertado
+nada ahí.
+
+Y abrir por ejemplo que viene siendo nuestro modelo (./models/Proyectos.js).
+Puedes ver que lo definimos como url y luego dice STRING:
+
+const Proyectos = db.define('proyectos', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    nombre: Sequelize.STRING,
+    url: Sequelize.STRING
+});
+
+En algunos casos muchas veces es muy común utilizar o seguir lo que viene siendo los 
+principios REST para tener tus URL's, nueva diagonal, ID, que vendría siendo el 
+proyecto, luego por ejemplo borrar y diagonal ID, actualizar diagonal el ID ...
+
+Pero en este caso quiero crear unas URL's que sean mejores para leer, un poco mejores para el 
+SEO, no precisamente por este proyecto, son proyectos personales, no tendría mucho 
+sentido, lo que viene siendo Google los indexara, pero algunos proyectos si es ideal.
+
+Por ejemplo si estas creando una tienda virtual que tengan sus URL's que sean fáciles de
+leer, en lugar de que tengas el producto con el ID 20, tengas el nombre del producto,
+eso va a ayudarte mucho con lo que viene siendo el posicionamiento.
+
+Por lo tanto veamos como se logra algo así.
+
+Primero voy a hacer lo siguiente voy a abir lo que viene siendo TablePlus,
+le voy a dar a aquí, de hecho TRUNCATE:
+
+    TRUNCATE TABLE proyectos;
+
+es mejor para que inicie de nueva cuenta lo que viene siendo los IDs desde cero.
+
+Entonces eliminamos lo que viene siendo la tabla con TRUCANTE, va a quedar vacía.
+
+Voy a abrir la terminal y vamos a instalar el paquete slug:
+
+    npm install --save slug
+
+================================================================================
+========================= NOTA IMPORTANTE ======================================
+================================================================================
+
+    npm install --save slug
+
+    Instala la última versión de slug
+
+Voy a instalar la misma que el autor tiene en el proyecto final, 
+que viene siendo la versión 0.9.3
+
+npm install --save slug@0.9.3
+
+================================================================================
+========================= CONTINUEMOS ... ======================================
+================================================================================
+slug lo que va a hacer es que va a tomar cadena de texto, supongamos 
+algo así como:
+
+'Tienda Virtual'
+
+que es lo que le pasaríamos al input, y nos va a convertir esto en:
+
+'tienda-virtual'
+    o 
+'tienda-virtual'
+
+es decir nos va a permitir crear una URL con algunos métodos de JS,
+Entonces obviamente es algo que podemos hacer, pero nos vamos ahorrar el tiempo instalando
+un paquete de npm.
+
+El siguiente paso que vamos a hacer es utilizar este slug.
+Ahora, podríamos ir a aquí a lo que viene siendo el controlador (./controllers/proyectosController.js),
+Donde creamos e insertamos el nuevo proyecto, donde tenemos:
+
+        const proyecto = await Proyectos.create({ nombre });
+
+Aquí podemos crear lo que viene siendo slug, podríamos hacer un console.log con usando slog:
+
+    // si hay errores 
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    } else {
+        // No hay errores
+        // Insertar en la BD
+        console.log(slug(nombre));
+        const proyecto = await Proyectos.create({ nombre });
+        res.redirect("/");
+    }
+
+
+Voy a dar scroll hacia arriba y voy a importar slug en la línea 2:
+
+const slug = require("slug");
+
+Pues guardamos cambios, esto se va a mandar a la consola vamos a ver como se ve.
+
+Vamos a dar clic a Nuevo Proyecto, y vamos a poner aquí Tienda Virtual, y Agregar.
+
+Si abrimos lo que es la terminal, puedes ver que aquí dice 'Tienda-Virtual', 
+agrega lo que viene siendo el guión a medias:
+
+foliva@ARRMRLAP005 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 1.18.9
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching: *.*
+[nodemon] starting `node ./index.js`
+Executing (default): CREATE TABLE IF NOT EXISTS `proyectos` (`id` INTEGER auto_increment , `nombre` VARCHAR(255), `url` VARCHAR(255), PRIMARY KEY (`id`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `proyectos`
+Conectado al Servidor
+Tienda-Virtual
+Executing (default): INSERT INTO `proyectos` (`id`,`nombre`) VALUES (DEFAULT,'Tienda Virtual');
+
+Podrías aquí ponerle, vamos a hacer lo siguiente vamos adicionarle un toLowerCase() al final:
+    // si hay errores 
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    } else {
+        // No hay errores
+        // Insertar en la BD
+        const url = slug(nombre).toLowerCase();
+        const proyecto = await Proyectos.create({ nombre, url });
+        res.redirect("/");
+    }
+
+Le pasamos como 2do parametro la url, el cual se va a mappear con el campo URL
+de la tabla Proyectos.
+
+Guardamos cambios de nueva cuenta, recargamos,
+y escribimos:
+
+Tienda Virtual en WooCommerce
+
+y damos clic en Agregar.
+
+Vamos a table Plus, y puedes ver que agrega conrrectamente la URL:
+1	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+
+y esto es excelente, es lo que esperarías o lo que quisieras que tus URL's fueran
+para una Tienda Virtual, para un sistema que ocupas que se indexe en lo que viene siendo
+las <> páginas en Google por ejemplo.
+
+lo que sigue
+-------------
+Entonces esto esta muy bien. 
+
+El detalle aquí es que si yo abro de nueva cuenta y otra persona va a crear otro proyecto,
+
+Tienda Virtual en WooCommerce
+
+, y le da a agregar, puedes ver en Table Plus:
+
+1	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+2	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+
+que tenemos 2 URL's iguales.
+
+Por lo tanto cuando alguien quiera ver esta tienda virtual (por ejemplo la del ID 2),
+lo más seguro es que le muestre la primera o alguna otra que es la que ellos quieran ver.
+
+Y si tienes muchos usuarios agregando proyectos, es muy díficil que agreguen algo 
+único.
+
+Pero lo importante de aquí, lo que quiero que te lleves, es que puedes que antes de almacenar
+en la BD, puedes agregarle más cosas, por ejemplo:
+
+        const url = slug(nombre).toLowerCase();
+
+puedes agregarle más datos e insertarlos en la BD.
+
+Puedes por ejemplo, algo que no sea necesariamente un input, puedes antes de que se inserte
+crear crear un nuevo objeto, agregarlo al objeto principal e insertarlo.
+
+Esto:
+
+const url = slug(nombre).toLowerCase();
+
+esta bien, esta muy bien
+
+en realidad en muchos proyectos así le vas a hacer, tendrás que agregarle algo extra 
+antes de almacenarlo - en algunos otros tal vez, no!.
+
+Pero puedes ver que nosotros tenemos repetidos y para ver que tengamos repetidos, 
+tendríamos que hacer una consulta a la BD, revisar que no haya repetidos, y agregarle a este
+segundo (ID 2 mostrado anteriormente), guión 1, guión 2, como hacen por ejemplo 
+muchas tiendas virtuales, muchos sitios web de clasificados.
+
+El problema que tiene eso es que tendríamos que escribir mucho más código aquí (antes de insertar 
+registro), y no es muy buena idea en los controladores tener como tanta lógica, y para ello en el 
+siguiente vídeo veremos lo que son los Hooks de Sequelize, y también el orden en que se ejecutan
+los <> comandos de Sequelize.
+
+
