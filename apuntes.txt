@@ -3261,3 +3261,119 @@ lo que sigue
 --------------
 Creo que esa va a ser la opción más sencilla para evitar duplicados, así que 
 veámoslo en el siguiente video.
+
+12.41 Generando una URL única para proyectos
+----------------------------------------------
+En este vídeo veremos como agregar lo que viene siendo un ID único al final de la URL para que 
+c/u sea <>.
+
+Existen <> formas, incluso por ejemplo abrimos hasta el final, vamos a encontrar un paquete
+que se llama uuid. 
+
+Esto te va a permitir crear lo que viene siendo un Id único, ya que el nombre 
+de la librería en eso se basa:
+
+    Universally Unique Identifier (uui)
+
+https://es.wikipedia.org/wiki/Identificador_%C3%BAnico_universal
+
+Pero el porblema es que te genera una cadena muy larga, muy larga,
+llegan a ser 16 caracteres.
+
+Hay muchas opciones pero una que creo que lo muy sencillo 
+es shortid.
+
+Por lo tanto vamos a ir a la terminal, y escribimos:
+
+    npm install shortid
+
+Es una librería bastante ligera.
+
+user@DESKTOP-VI2L807 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm install shortid
+
+added 2 packages, and audited 381 packages in 3s
+
+10 packages are looking for funding
+  run `npm fund` for details
+
+14 vulnerabilities (10 moderate, 4 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+Vamos a importar la librería en ./models/Proyectos.js:
+
+const shortid = require("shortid");
+
+Y aquí por ejemplo donde tenemos esta url:
+
+proyecto.url = url;
+
+Vamos a reemplazar la parte de url por un Template String:
+
+    hooks: {
+        beforeCreate(proyecto) {
+            const url = slug(proyecto.nombre).toLowerCase();
+
+            proyecto.url = proyecto.url = `${url}-${shortid.generate()}`;
+        }
+    }
+
+Y guardamos cambios.
+Abrimos nuestro poryecto, y en: 
+
+http://localhost:3000/nuevo-proyecto
+
+En Nuevo proyecto escribimos:
+
+    Tienda Virtual en WooCommerce
+
+Le damos clic en Agregar, vamos a TablePlus:
+
+SELECT * 
+FROM proyectos;
+
+1	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+2	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+3	1	NULL
+4	Diseño de Logotipo	            diseno-de-logotipo
+5	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce-KMWzedziT
+
+Y puedes ver que agrega:
+
+    tienda-virtual-en-woocommerce-KMWzedziT
+
+tienda-virtual, y luego nos agrega este pequeño stick.
+
+En mi opinión creo que esta es la opción más sencilla.
+La otra requeriría, tener un código mucho más largo y no tiene nada de malo
+que quede de esta forma.
+
+Tenemos tienda virtual alguans palabra clave.
+
+Y si por ejemplo alguien más agrega: 
+    Tienda Virtual en WooCommerce
+
+nos va a generar una llave única.
+
+Puede ser que las combinaciones son bastantes.
+La idea de esto, es de nueva cuenta, es que en lugar de que las URLs
+sean 1, 2, 3, 20, que no ayudan mucho al CEO, tenemos algo así que te va ayudar 
+bastante.
+
+lo que sigue
+--------------
+En el siguiente video vamos a continuar desarrollando este proyecto, y ya tenemos
+algunos proyectos aquí (en la tabla proyectos), 
+puedes que están de este lado, y por ejemplo del 
+lado izquierdo tenemos esto aquí (varios proyectos en HTML estático).
+
+Aquí tendríamos que mostrarlos, ya estamos creandolos, veamos como listarlos.
+Antes de ver como eliminar y actualizarlos.
+Así que continuamos en el próximo video.
