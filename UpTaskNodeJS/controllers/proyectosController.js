@@ -1,5 +1,4 @@
 const Proyectos = require("../models/Proyectos");
-const slug = require("slug");
 
 exports.proyectosHome = (req, res) => {
     res.render("index", {
@@ -36,8 +35,7 @@ exports.nuevoProyecto = async (req, res) => {
     } else {
         // No hay errores
         // Insertar en la BD
-        const url = slug(nombre).toLowerCase();
-        const proyecto = await Proyectos.create({ nombre, url });
+        const proyecto = await Proyectos.create({ nombre });
         res.redirect("/");
     }
 };

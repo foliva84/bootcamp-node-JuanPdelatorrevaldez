@@ -2966,4 +2966,298 @@ registro), y no es muy buena idea en los controladores tener como tanta lógica,
 siguiente vídeo veremos lo que son los Hooks de Sequelize, y también el orden en que se ejecutan
 los <> comandos de Sequelize.
 
+12.40 Utilizando Sequelize Hooks para generar una URL automáticamente
+-------------------------------------------------------------------------
+En el video anterior agregamos slug:
 
+    const url = slug(nombre).toLowerCase(); 
+
+lo que viene siendo una librería de npm, que ya nos genera lo que vienen siendo estas URL's únicas o 
+al menos más fáciles de leer.
+
+El problema es que si bien no son únicas son fáciles de leer para
+por ejemplo Google, yahoo o cualquier otro en el que quieras inscribir tu sitio web.
+
+Pero por ejemplo, el detalle que tenemos aquí es que esta URL, y esta son iguales:
+
+1	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+2	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+
+Usualmente c/URL debe ser única para su contenido, por lo tanto esto nos va 
+a representar un problema.
+
+Por lo tanto este código que está aquí lo va a quitar:
+
+    const url = slug(nombre).toLowerCase();
+
+y también esta url:
+
+        const proyecto = await Proyectos.create({ nombre, url });
+
+Introduciendo Sequelize hooks al código
+-----------------------------------------
+Y vamos a introducir algo que se conoce como hooks. 
+En Sequelize una función o un hooks es una función que corre en determinado tiempo.
+
+Para ello tienes que abrir lo que viene siendo tu model (./models/Proyectos.js), 
+y aquí por ejemplo tenemos el modelo y agregamos la descripción de las tablas de la BD.
+
+Pero después de esta descripción aquí, podemos poner una coma, y por ejemplo puedes ver
+que el segundo parámetro son las opciones, y en ella vamos agregar los hooks.
+
+Por lo tanto coma, abrimos llaves y aquí ponemos hooks - tiene que ser de esta forma,
+abrimos llave de nueva cuenta.
+
+Y hay <> hooks, ahora que hacen estos hooks exactamente ... 
+Corren una función en determinado tiempo.
+
+Por ejemplo supongamos que vas a insertar algo en la BD como estamos haciendo aquí
+con .create(), existe un hook o una función que se va a ejecutar antes de que sea 
+insertado en la BD, y ese hook se llama beforeCreate().
+
+y aquí le puedes poner un console.log("Antes de Insertar en la BD");
+
+Esta función se llama así - beforeCreate(), y bueno se ejecuta de que se inserte en la 
+BD ... 
+
+Archivo ./models/Proyectos.js
+const Sequelize = require("sequelize");
+
+const db = require("../config/db");
+
+const Proyectos = db.define('proyectos', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    nombre: Sequelize.STRING,
+    url: Sequelize.STRING
+}, {
+    hooks: {
+        beforeCreate() {
+            console.log("Antes de Insertar en la BD");
+        }
+    }
+});
+
+module.exports = Proyectos;
+
+Y por ejemplo yo guardo cambios.
+
+hago clic en Nuevo Proyecto, aqyí vamos a poner 1 y le doy a agregar.
+
+Vamos a abrir lo que viene siendo la terminal, puedes ver que aquí tenemos:
+
+"Antes de Insertar en la BD" y después tenemos este INSERT:
+
+user@DESKTOP-VI2L807 MINGW64 /c/proyectos/bootcamp-node-JuanPdelatorrevaldez/UpTaskNodeJS (master)
+$ npm run start
+
+> uptasknodejs@1.0.0 start
+> nodemon ./index.js
+
+[nodemon] 1.19.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching dir(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node ./index.js`
+Executing (default): CREATE TABLE IF NOT EXISTS `proyectos` (`id` INTEGER auto_increment , `nombre` VARCHAR(255), `url` VARCHAR(255), PRIMARY KEY (`id`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `proyectos`
+Conectado al Servidor
+Antes de Insertar en la BD
+Executing (default): INSERT INTO `proyectos` (`id`,`nombre`) VALUES (DEFAULT,'1');
+
+Entonces este hook se corre antes ...
+Ahora cómo vas a saber dónde vas a encontrar estos hooks, no ?
+Como por ejemplo puedo saber cómo se llama el que es antes o el que es después.
+
+https://sequelize.org/v4/manual/tutorial/hooks.html
+ 
+Lo que vien siendo esta parte de aquí en Order of Operations 
+(Orden de las operaciones) de Sequelize, vas a encontrar este orden.
+
+Puedes ver que tenemos beforeBulkCreate(instances, options):
+- esto quiere decir cuando insertas múltiples registros.
+  Cuando veas Bulk es que es más de uno.
+
+  Tenemos beforeBulkDestroy(options): 
+- que es para eliminar 
+
+o beforeBulkUpdate(options)
+
+Esas son el primer orden - estan señaladas con (1).
+
+Luego tenemos 
+(2) 
+   beforeValidate(instance, options)
+
+   La validación ... 
+
+Osea podemos crear un hook, en esta parte por ejemplo, que
+sea antes de validar (no en la validación).
+
+Muy importante no es la validación sino antes de validar.
+Después tenemos uno de validar, y después tenemos uno de después de la vlaidación.
+
+Entonces es importante este orden ... no te lo tienes que aprender, 
+en realidad solamente saber que existe.
+
+Como en este caso por ejemplo donde vamos a revisar o crear un 
+elemento nuevo en la BD antes de que guarde en la misma.
+
+Despues puedes ver que tenemos:
+
+    beforeCreate(instance, options)
+    beforeDestroy(instance, options) //     para eliminar
+    beforeUpdate(instance, options) // para actualizar
+    beforeSave(instance, options) // ya guardar en la BD, etc...
+
+ya estos que no dicen Bulk, son para un solo elemento, es decir 
+como el que estamos haciendo ahorita de agregar un proyecto. 
+
+Después vienen estos métodos: 
+
+por ejemplo
+    create 
+    destroy // que es para eliminar con MySQL
+    update // que es para actualizar 
+
+que es para lo que viene siendo insertar, si aquí te das cuenta tnemos .create() - que es el INSERT INTO:
+    const proyecto = await Proyectos.create({ nombre });
+
+Y después tenemos otros que corren después de estas acciones.
+    afterCreate(instance, options)
+    afterDestroy(instance, options)
+    afterUpdate(instance, options)
+    afterSave(instance, options)
+    afterUpsert(created, options)
+
+Entonces puedes por ejemplo, si tienes un requerimiento muy específico, 
+puedes revisar estos de aquí y ver en qué parte puedes agregar codigo 
+para que tus controladores no queden cómo que tan cargados, puedes 
+utilizar lo que vienen siendo estos hocks, y por ejemplo aquí ponerle 
+beforeCreate(). 
+
+Ahora beforeCreate() cuando yo aquí le doy por ejemplo crear un nuevo proyecto
+(create()), va a tomar un proyecto, un objeto proyecto - lo puedes nombrar como tu
+desees, pero obviamente se va a insertar antes de crearse un proyecto. 
+En esta parte aquí va ir el nombre, va ir la URL vacía, y el 
+ID, bueno ese se genera automáticamente.
+
+Pero en este momento aquí este beforeCreate() va a tener los datos antes de que
+sean insertados estos datos que están aquí, estos de aquí (los del INSERT).
+
+Por lo tanto este proyecto aquí es donde puede ponerle, aquí es donde puedo ponerle,
+pegar esta parte de aquí:
+    const url = slug(nombre).toLowerCase();
+
+Lo modificamos para que haga referencia a proyecto.nombre:
+
+    beforeCreate(proyecto) {
+        const url = slug(proyecto.nombre).toLowerCase();
+    }
+
+y aquí luego le vamos a poner proyecto.url, ya para que lo agregue como 
+para te del objeto que se va insertar aquí en el campo URL del registro:
+
+    beforeCreate(proyecto) {
+        const url = slug(proyecto.nombre).toLowerCase();
+
+
+        proyecto.url = url;
+    }
+ 
+
+De momento lo vamos a decir así, dejo este espacio aquí, y obviamente no va a estar
+terminado pero queremos probar que este hooks funciona, y que hace lo que queremos que haga.
+
+Guardamos cambios, abrimos de nueva cuenta nuevo proyecto, y aquí a poner por ejemplo:
+
+    Diseño de Logotipo
+
+algo muy sencillo.
+
+No estoy revisando aún que no tenga repetidos, porque esa funcionalidad 
+no la hemos hecho.
+
+Quiero ver que funcionen los slug y se agreguen automáticamente.
+Damos clic en Agregar, y puedes ver que es como que se queda dando vueltas...
+
+Aquí hay un detalle, y creo que es la parte del modelo, en la parte 
+del controlador puede ser que este: 
+(./controllers/pryectosController.js):
+
+    if (errores.length > 0) {
+        res.render("nuevo-proyecto", {
+            nombrePagina: "Nuevo Proyecto",
+            errores
+        })
+    } else {
+        // No hay errores
+        // Insertar en la BD
+        const url = slug(nombre).toLowerCase();
+        const proyecto = await Proyectos.create({ nombre });
+        res.redirect("/");
+    }
+
+puedes ver que aquí antes tenía slug:
+    const url = slug(nombre).toLowerCase();
+
+Y este slug fue un paquete que instalamos, está aquí arriba - línea 2
+de ./controllers/proyectosController.js:
+
+const slug = require("slug");
+
+Por lo tanto lo voy a rehacer para que quede como esta, pero ese hooks 
+es muy importante que esté también en el modelo (./models/Proyectos.js).
+
+Corto este require:
+
+const slug = require("slug");
+
+Y me lo llevo al modelo (./models/Proyectos.js).
+
+Guardamos cambios en ambos archivos ./models/Proyectos.js y ./controllers/proyectosController.js
+
+Y fue lo que me hizo falta.
+
+Aqui vamos a recargar (en http://localhost:3000/).
+
+Entonces volvemos a nuevo proyecto y escribimos:
+
+    Diseño de Logotipo
+
+y damos clic en Agregar.
+
+Puedes ver que nos redirecciona, eso esta bien.
+
+Entonces recarguemos TablePlus, y puedes ver que funciona correctamente la URL:
+SELECT * 
+FROM proyectos;
+
+1	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+2	Tienda Virtual en WooCommerce	tienda-virtual-en-woocommerce
+3	1	NULL
+4	Diseño de Logotipo	diseno-de-logotipo
+
+Seguimos teniendo el problema de que si yo agrego otro que se llama igual:
+    Diseño de Logotipo
+
+lo va a insertar duplicado, pero tenemos esta parte de aquí:
+
+    hooks: {
+        beforeCreate(proyecto) {
+            const url = slug(proyecto.nombre).toLowerCase();
+
+            proyecto.url = url;
+        }
+    }
+
+este hooks funciona, y podemos escribir un código que por ejemplo 
+nos permita o nos genere un ID único al final de la URL.
+
+lo que sigue
+--------------
+Creo que esa va a ser la opción más sencilla para evitar duplicados, así que 
+veámoslo en el siguiente video.
